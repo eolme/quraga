@@ -1,0 +1,110 @@
+img {
+  -webkit-user-drag: none;
+  -webkit-app-region: no-drag;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.Button--round {
+  border-radius: 999em;
+}
+
+.Button--ios {
+  transition: background-color 600ms cubic-bezier(.36, .66, .04, 1);
+  transition: background-color 600ms var(--ios-easing);
+}
+
+.Button--android {
+  transition: background-color 300ms cubic-bezier(.4, 0, .2, 1);
+  transition: background-color 300ms var(--android-easing);
+}
+
+.Button[disabled] {
+  opacity: 1;
+  background-color: var(--app-blue);
+}
+
+.Button.Button--green {
+  background-color: var(--app-green);
+}
+
+.Button.Button--red {
+  background-color: var(--app-red);
+}
+
+.Button.Button--blue {
+  color: var(--app-primary);
+  background-color: var(--app-black);
+}
+
+.Panel--flex .Panel__in {
+  display: flex;
+  flex-direction: column;
+}
+
+.Panel .Panel__in {
+  background-image: url('../assets/back.svg'), linear-gradient(180deg, #4571F2 0%, #537EF9 100%);
+  background-repeat: repeat-y, no-repeat;
+  background-position: 0 0, center;
+  background-size: 100% auto, cover;
+}
+
+.Panel--clear .Panel__in {
+  background-image: none;
+}
+
+.Header,
+.Div {
+  user-select: none;
+}
+
+.Div {
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.Panel--flex .Div {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+@media (min-width: 374px) {
+  .Div,
+  .Div--android,
+  .Div--ios {
+    padding: 12px 24px;
+  }
+}
+
+.Tabs {
+  background: transparent;
+}
+
+.ModalPage {
+  --text_primary: #3E3E3E;
+  --text_secondary: #818c99;
+  --background_content: #fff;
+}
+
+.ModalPage .ModalPage__in {
+  padding-top: 8px;
+}
+
+.Gallery {
+  height: 100%;
+  flex-grow: 1;
+}
+
+.Gallery--fill.Gallery--ios .Gallery__slide {
+  height: calc(100vh - 52px);
+  height: calc(100vh - var(--panelheader_height_ios, 52px) - var(--safe-area-inset-bottom, 0px) - var(--safe-area-inset-top, 20px));
+}
+
+.Gallery--fill.Gallery--android .Gallery__slide {
+  height: calc(100vh - 56px);
+  height: calc(100vh - var(--panelheader_height_android, 56px) - var(--safe-area-inset-bottom, 0px) - var(--safe-area-inset-top, 0px));
+}

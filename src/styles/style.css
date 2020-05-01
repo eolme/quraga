@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=block');
+
+body[scheme] {
+  --app-primary: rgb(255, 255, 255);
+  --app-secondary: rgb(53, 95, 222);
+  --app-black: rgb(0, 75, 161);
+
+  --app-green: #46E4AC;
+  --app-red: #EFA22F;
+  --app-blue: #dae3fc;
+
+  --app-table: rgba(255, 255, 255, 0.2);
+
+  --app-font:
+    Montserrat,
+    'Proxima Nova',
+    Gotham,
+    Soleil,
+    Armitage,
+    'Museo Sans',
+    Lato,
+    'Avenir Next',
+    Effra,
+    'SF Pro',
+    'Franklin Gothic Medium',
+    -apple-system,
+    BlinkMacSystemFont,
+    Arial,
+    sans-serif;
+
+  --app-background: url('../assets/back.svg'), linear-gradient(180deg, #4571F2 0%, #537EF9 100%);
+
+  --font-common: var(--app-font);
+  --font-ios: var(--app-font);
+  --font-android: var(--app-font);
+  --font-tt: var(--app-font);
+
+  --accent: var(--app-primary);
+
+  --text_primary: var(--app-primary);
+  --text_secondary: rgba(255, 255, 255, 0.5);
+
+  --header_background: var(--app-secondary);
+  --header_text: var(--app-primary);
+  --header_tint: var(--app-primary);
+
+  --button_primary_background: var(--app-primary);
+  --button_primary_foreground: var(--app-black);
+
+  --background_content: var(--app-secondary);
+}
+
+html, body, div#root {
+  background: var(--app-secondary);
+  font-weight: 600;
+}
+
+@import './animations.css';
+@import './offline.css';
+@import './patch.css';
+@import './components.css';

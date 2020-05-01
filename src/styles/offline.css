@@ -1,0 +1,59 @@
+@import '../../node_modules/@vkontakte/vkui/src/components/ModalRoot/ModalRoot.css';
+@import '../../node_modules/@vkontakte/vkui/src/components/ModalPage/ModalPage.css';
+
+.Offline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: transparent;
+
+  pointer-events: all;
+}
+
+.Offline__mask {
+  z-index: 1;
+  transition: none;
+  animation: none;
+}
+
+.Offline__group {
+  position: absolute;
+  bottom: var(--safe-area-inset-bottom);
+  left: 0;
+  z-index: 2;
+
+  width: 100%;
+
+  background-color: #fff;
+}
+
+.ModalPage__in.Offline__group {
+  height: auto;
+  max-height: 100%;
+  padding-top: 8px;
+}
+
+.Offline--enter .Offline__mask {
+  animation: modal-fade-enter 150ms ease-in;
+}
+
+.Offline--leave .Offline__mask {
+  animation: modal-fade-leave 150ms ease-in;
+}
+
+@keyframes modal-fade-enter {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes modal-fade-leave {
+  to {
+    background-color: rgba(0, 0, 0, 0);
+  }
+}

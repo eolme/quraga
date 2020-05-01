@@ -1,0 +1,53 @@
+.fade-enter,
+.fade-appear,
+.fade-exit-active,
+.fade-exit-done {
+  opacity: 0;
+}
+.fade-exit,
+.fade-enter-active,
+.fade-enter-done,
+.fade-appear-active,
+.fade-appear-done {
+  opacity: 1;
+}
+.Root--ios .fade-appear-active,
+.Root--ios .fade-enter-active,
+.Root--ios .fade-exit-active {
+  transition: opacity 600ms cubic-bezier(.36, .66, .04, 1);
+  transition: opacity 600ms var(--ios-easing);
+}
+.Root--android .fade-appear-active,
+.Root--android .fade-enter-active,
+.Root--android .fade-exit-active {
+  transition: opacity 300ms cubic-bezier(.4, 0, .2, 1);
+  transition: opacity 300ms var(--android-easing);
+}
+
+.switch-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.switch-enter-active,
+.switch-enter-done,
+.switch-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+.switch-exit-active,
+.switch-exit-done {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.Root--ios .switch-appear-active,
+.Root--ios .switch-enter-active,
+.Root--ios .switch-exit-active {
+  transition: opacity 300ms cubic-bezier(.36, .66, .04, 1);
+  transition: opacity 300ms var(--ios-easing);
+}
+.Root--android .switch-appear-active,
+.Root--android .switch-enter-active,
+.Root--android .switch-exit-active {
+  transition: opacity 300ms cubic-bezier(.4, 0, .2, 1);
+  transition: opacity 300ms var(--android-easing);
+}

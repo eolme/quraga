@@ -1,0 +1,21 @@
+<type>[optional scope]: <description>
+
+# --- COMMIT END ---
+# Example:
+# feat(lang): add russian language
+#
+# (Max 50 char)
+#
+# Type can be:
+#
+# ᛫ feat     - a new feature
+# ᛫ fix      - a bug fix
+# ᛫ refactor - a code change that neither fixes a bug nor adds a feature
+# ᛫ chore    - dependencies or similar
+# ᛫ docs     - documentation only changes
+# ᛫ style    - changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+# ᛫ perf     - a code change that improves performance
+# ᛫ hack     - a temporary fix to make things move forward
+# ᛫ wip      - for intermediate commits to keep patches reasonably sized
+# ᛫ BREAKING CHANGE - something that breaks other changes
+#

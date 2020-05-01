@@ -1,0 +1,56 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { classNames as cn } from '@vkontakte/vkui';
+
+const Logo = ({ className }) => {
+  return (
+    <div className={cn('Logo', className)}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="Logo--icon">
+        <g filter="url(#filter0_i)">
+          <path fill="url(#paint0_linear)" d="M11.86 42.35a5.9 5.9 0 005.94 5.88h11.93A5.25 5.25 0 0135 53.46v1.3A5.25 5.25 0 0129.73 60H17.8C7 60 0 53 0 42.35V26h11.86v16.35z"/>
+          <path fill="url(#paint1_linear)" d="M18 11.78c-3.31 0-6 2.64-6 5.9v13.08C12 33.66 9.61 36 6.67 36H5.33A5.29 5.29 0 010 30.76V17.67C0 7 7 0 18 0h19v11.78H18z"/>
+          <path fill="url(#paint2_linear)" d="M48 17.7c0-3.25-2.69-5.9-6-5.9h-6.67A5.29 5.29 0 0130 6.56V5.25C30 2.35 32.39 0 35.33 0H42c10.94 0 18 7 18 17.7v13.05c0 2.9-2.39 5.25-5.33 5.25h-1.34A5.29 5.29 0 0148 30.75V17.7z"/>
+          <path fill="url(#paint3_linear)" d="M60 54.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z"/>
+        </g>
+        <defs>
+          <linearGradient id="paint0_linear" x1="31.8" x2="3.63" y1="55.1" y2="32.97" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FFD44B"/>
+            <stop offset=".48" stopColor="#F068AF"/>
+            <stop offset="1" stopColor="#9A5DE5"/>
+          </linearGradient>
+          <linearGradient id="paint1_linear" x1="5.83" x2="36.38" y1="31.09" y2="-2.69" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FFD44B"/>
+            <stop offset=".52" stopColor="#F068AF"/>
+            <stop offset="1" stopColor="#9A5DE5"/>
+          </linearGradient>
+          <linearGradient id="paint2_linear" x1="30" x2="56.19" y1="4.92" y2="33.87" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FFD44B"/>
+            <stop offset=".48" stopColor="#F068AF"/>
+            <stop offset="1" stopColor="#9A5DE5"/>
+          </linearGradient>
+          <linearGradient id="paint3_linear" x1="49.94" x2="57.64" y1="50.89" y2="60" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#FFD44B"/>
+            <stop offset=".48" stopColor="#F068AF"/>
+            <stop offset="1" stopColor="#9A5DE5"/>
+          </linearGradient>
+          <filter id="filter0_i" width="60" height="62" x="0" y="0" colorInterpolationFilters="sRGB" filterUnits="userSpaceOnUse">
+            <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+            <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feColorMatrix in="SourceAlpha" result="hardAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+            <feOffset dy="4"/>
+            <feGaussianBlur stdDeviation="1"/>
+            <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+            <feBlend in2="shape" result="effect1_innerShadow"/>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+  );
+};
+
+Logo.propTypes = {
+  className: PropTypes.any
+};
+
+export default React.memo(Logo);
