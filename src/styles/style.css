@@ -42,6 +42,11 @@ body[scheme] {
   --background_content: var(--app-secondary);
 }
 
+html {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
 html, body, div#root {
   background: var(--app-secondary);
   font-weight: 600;
