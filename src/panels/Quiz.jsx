@@ -218,7 +218,7 @@ const Quiz = ({ id }) => {
                   renderer={Timer}
                   date={question.ttw}
                 />
-                <img src={require('../assets/alarm.svg')} alt="Время" className="StageTitle__icon" />
+                <img src={require(/* webpackPreload: true */ '../assets/alarm.svg')} alt="Время" className="StageTitle__icon" />
                 <CSSTransition
                   in={Boolean(global.store.game.badge)}
                   appear={true}
@@ -247,7 +247,7 @@ const Quiz = ({ id }) => {
                 global.store.game[global.store.game.vs].id === -1 ? (
                   <>
                     <img
-                      src={require('../assets/win.png')}
+                      src={require(/* webpackPreload: true */ '../assets/win.png')}
                       alt="Молодец"
                       className="GameResult__image"
                     />
@@ -257,7 +257,7 @@ const Quiz = ({ id }) => {
                   points[global.store.game.is] === points[global.store.game.vs] ? (
                     <>
                       <img
-                        src={require('../assets/win.png')}
+                        src={require(/* webpackPreload: true */ '../assets/win.png')}
                         alt="Ничья"
                         className="GameResult__image"
                       />
@@ -267,7 +267,7 @@ const Quiz = ({ id }) => {
                     points[global.store.game.is] > points[global.store.game.vs] ? (
                       <>
                         <img
-                          src={require('../assets/win.png')}
+                          src={require(/* webpackPreload: true */ '../assets/win.png')}
                           alt="Победа"
                           className="GameResult__image"
                         />
@@ -276,7 +276,7 @@ const Quiz = ({ id }) => {
                     ) : (
                       <>
                         <img
-                          src={require('../assets/lose.png')}
+                          src={require(/* webpackPreload: true */ '../assets/lose.png')}
                           alt="Поражение"
                           className="GameResult__image"
                         />
