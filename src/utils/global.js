@@ -32,28 +32,26 @@ const axiosInstance = axios.create({
   }
 });
 
-context.$store = {
-  isOffline: !window.navigator.onLine,
-  persist: {},
-  user: {},
-  game: {},
-  modal: null,
-  mode: null,
-  join: -1
+const global = {
+  store: {
+    isOffline: !window.navigator.onLine,
+    persist: {},
+    user: {},
+    game: {},
+    modal: null,
+    mode: null,
+    join: -1
+  },
+  storage,
+  axios: axiosInstance,
+  socket,
+  bridge,
+  bus,
+  effects
 };
-context.$storage = storage;
-context.$axios = axiosInstance;
-context.$socket = socket;
-context.$bridge = bridge;
-context.$bus = bus;
-context.$effects = effects;
 
-export default {
-  store: context.$store,
-  storage: context.$storage,
-  axios: context.$axios,
-  socket: context.$socket,
-  bridge: context.$bridge,
-  bus: context.$bus,
-  effects: context.$effects
-};
+if (process.env.NODE_ENV !== 'production') {
+  context.$global = global;
+}
+
+export default global;
