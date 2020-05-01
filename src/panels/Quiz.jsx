@@ -434,7 +434,8 @@ const Quiz = ({ id }) => {
       global.store.game.badge = null;
 
       ask.ttw = Date.now() + ask.ttw * 1000;
-      ask.order = global.store.game.current += 1;
+      ++global.store.game.current;
+      ask.order = global.store.game.current;
       ask.answers = shuffle(ask.answers);
 
       setState(false);
