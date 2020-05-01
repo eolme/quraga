@@ -3,7 +3,6 @@ const {
   disableEsLint,
   addWebpackPlugin,
   addBabelPlugin,
-  addWebpackAlias,
   watchAll
 } = require('customize-cra');
 
@@ -13,11 +12,8 @@ module.exports = process.env.NODE_ENV === 'production' ?
   override(
     disableEsLint(),
     addBabelPlugin('@babel/transform-react-constant-elements'),
+    addBabelPlugin('@babel/transform-react-inline-elements'),
     addBabelPlugin('transform-react-remove-prop-types'),
-    addWebpackAlias({
-      'react': 'preact/compat',
-      'react-dom': 'preact/compat'
-    }),
     addWebpackPlugin(new PreloadWebpackPlugin({
       rel: 'preload',
       include: 'allAssets',
@@ -46,9 +42,7 @@ module.exports = process.env.NODE_ENV === 'production' ?
     }))
   ) : override(
     disableEsLint(),
-    watchAll(),
-    addWebpackAlias({
-      'react': 'preact/compat',
-      'react-dom': 'preact/compat'
-    })
+    addBabelPlugin('@babel/transform-react-constant-elements'),
+    addBabelPlugin('@babel/transform-react-inline-elements'),
+    watchAll()
   );
