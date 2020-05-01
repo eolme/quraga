@@ -549,6 +549,15 @@
   flex-shrink: 0;
 }
 
+.Stage {
+  width: 700px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  padding-bottom: 72px;
+  padding-bottom: calc(var(--safe-area-inset-bottom, 0px) + 72px);
+}
+
 .Stage,
 .Root--ios .Stage {
   padding-top: 72px;
