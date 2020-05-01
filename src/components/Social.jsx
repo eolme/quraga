@@ -9,19 +9,25 @@ const Social = () => {
   const platform = usePlatform();
 
   useEffect(() => {
+    // history may be loaded or not (like side effect) so we need this check
+    let safeToUpdate = true;
+
     const prettyUpdateFriends = () => {
       window.requestAnimationFrame(() => {
-        updateFriends(global.store.user.friends);
+        if (safeToUpdate) {
+          updateFriends(global.store.user.friends);
+        }
       });
     };
 
     if (global.store.user && global.store.user.friends) {
       prettyUpdateFriends();
     } else {
-      global.bus.once('app:auth', prettyUpdateFriends);
+      global.bus.on('app:auth', prettyUpdateFriends);
     }
 
     return () => {
+      safeToUpdate = false;
       global.bus.detach('app:auth', prettyUpdateFriends);
     };
   }, []);
@@ -32,7 +38,7 @@ const Social = () => {
         return (<img key={friend.id} src={friend.avatar} alt={friend.id} />);
       });
     } else {
-      return [];
+      return null;
     }
   }, [friends]);
 
