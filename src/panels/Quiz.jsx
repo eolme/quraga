@@ -31,11 +31,19 @@ const Quiz = ({ id }) => {
   const platform = usePlatform();
   const [type, setType] = useState(null);
   const [view, setView] = useState(null);
+  const [badge, setBadge] = useState(null);
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState(null);
-  const [answered, setState] = useState(false);
   const [percent, setPercent] = useState(50);
   const [points, setPoints] = useState({ creator: 0, opponent: 0 });
+
+  let immediateAnswered = false;
+  const [renderAnswered, setRenderAnswered] = useState(false);
+
+  const setState = useCallback((state) => {
+    immediateAnswered = state;
+    setRenderAnswered(state);
+  }, [setRenderAnswered]);
 
   const exit = useCallback(() => {
     global.store.mode = null;
@@ -92,7 +100,7 @@ const Quiz = ({ id }) => {
   const answers = useMemo(() => {
     if (question) {
       const onAnswerClick = (id) => {
-        if (answered) {
+        if (renderAnswered || immediateAnswered) {
           return;
         }
         setState(true);
@@ -109,7 +117,7 @@ const Quiz = ({ id }) => {
         return (
           <Button
             key={item.id}
-            disabled={answered}
+            disabled={renderAnswered}
             onClick={onAnswerClick.bind(null, item.id)}
             className={cn({
               'Button--green':
@@ -139,7 +147,7 @@ const Quiz = ({ id }) => {
       });
     }
     return null;
-  }, [question, answer, answered]);
+  }, [question, answer, renderAnswered]);
 
   useEffect(() => {
     window.requestAnimationFrame(() => {
@@ -220,14 +228,14 @@ const Quiz = ({ id }) => {
                 />
                 <img src={require(/* webpackPreload: true */ '../assets/alarm.svg')} alt="Время" className="StageTitle__icon" />
                 <CSSTransition
-                  in={Boolean(global.store.game.badge)}
+                  in={Boolean(badge)}
                   appear={true}
                   classNames="fade"
                   timeout={platform === ANDROID ? 300 : 600}
                 >
                   {
-                    global.store.game.badge ? (
-                      <div className="PanelTitle--after StageTitle__badge">{global.store.game.badge}</div>
+                    badge ? (
+                      <div className="PanelTitle--after StageTitle__badge">{badge}</div>
                     ) : (
                       <div className="PanelTitle--after" />
                     )
@@ -334,7 +342,7 @@ const Quiz = ({ id }) => {
           return;
       }
     });
-  }, [type, question, answers]);
+  }, [type, badge, question, answers]);
 
   useEffect(() => {
     let timeout = null;
@@ -427,19 +435,19 @@ const Quiz = ({ id }) => {
     });
 
     global.socket.on('badge', (badge) => {
-      global.store.game.badge = badge.message;
+      setBadge(badge.message);
     });
 
     global.socket.on('new-question', (ask) => {
-      global.store.game.badge = null;
+      ++global.store.game.current;
 
       ask.ttw = Date.now() + ask.ttw * 1000;
-      ++global.store.game.current;
       ask.order = global.store.game.current;
       ask.answers = shuffle(ask.answers);
 
       setState(false);
       setQuestion(ask);
+      setBadge(null);
       setType('question');
     });
 
