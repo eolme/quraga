@@ -13,20 +13,12 @@ body[scheme] {
 
   --app-font:
     Montserrat,
-    'Proxima Nova',
-    Gotham,
-    Soleil,
-    Armitage,
-    'Museo Sans',
-    Lato,
-    'Avenir Next',
-    Effra,
-    'SF Pro',
-    'Franklin Gothic Medium',
-    -apple-system,
-    BlinkMacSystemFont,
-    Arial,
-    sans-serif;
+    'Avenir Black',
+    Verdana,
+    'Century Gothic',
+    'Arial Black',
+    monospace,
+    monospace;
 
   --app-background: url('../assets/back.svg'), linear-gradient(180deg, #4571F2 0%, #537EF9 100%);
 
