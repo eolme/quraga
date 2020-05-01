@@ -7,7 +7,7 @@ import useGlobal from '../hooks/use-global';
 const History = () => {
   const global = useGlobal();
   const platform = usePlatform();
-  const [history, updateHistory] = useState(global.store.user && global.store.user.history);
+  const [history, updateHistory] = useState(global.store.user && global.store.user.history || null);
 
   useEffect(() => {
     const prettyUpdateHistory = () => {

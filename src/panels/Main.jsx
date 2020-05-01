@@ -20,7 +20,7 @@ const Main = ({ id, callback }) => {
     wins_count: '00',
     rating: '00'
   });
-  const [history, updateHistory] = useState(null);
+  const [history, updateHistory] = useState(global.store.user && global.store.user.history || null);
 
   const forceShowCallback = useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -142,10 +142,12 @@ const Main = ({ id, callback }) => {
                 </div>
               </div>
               {
-                history && history.length ? (
-                  <History />
-                ) : (
-                  <Social />
+                history === null ? null : (
+                  history && history.length ? (
+                    <History />
+                  ) : (
+                    <Social />
+                  )
                 )
               }
             </Div>
