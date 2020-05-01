@@ -136,7 +136,7 @@ const Base = () => {
   }, [loaded]);
 
   return (
-    <>
+    <React.StrictMode>
       {
         loaded ? (
           <App />
@@ -145,7 +145,7 @@ const Base = () => {
         )
       }
       <Offline visible={showOffline} />
-    </>
+    </React.StrictMode>
   );
 };
 
