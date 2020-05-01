@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import useGlobal from '../hooks/use-global';
 import {interpretResponse} from '../utils/data';
 
-const RatingTable = ({mode}) => {
+const RatingTable = ({ mode }) => {
   const global = useGlobal();
   const [rating, updateRating] = useState(null);
   const [modePlace, setModePlace] = useState(null);
