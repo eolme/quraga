@@ -237,10 +237,6 @@
   height: 44px;
 }
 
-.Play {
-
-}
-
 .Play-in {
   display: flex;
   flex-direction: row;
@@ -963,4 +959,51 @@
   margin-bottom: 12px;
   color: var(--app-black);
   text-align: center;
+}
+
+.RecreateMessage {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.Recreate__actions {
+  display: flex;
+}
+
+.RecreateMessage__content {
+  border-radius: 20px 20px 20px 4px;
+  background-color: var(--app-blue);
+  color: var(--text_primary);
+  line-height: 30px;
+  padding: 12px;
+  font-size: 16px;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+@media (min-width: 374px) {
+  .RecreateMessage__content {
+    padding: 12px 24px;
+  }
+}
+
+.RecreateMessage__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999em;
+  overflow: hidden;
+  margin-right: 12px;
+}
+
+.RecreateMessage__icon {
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-left: 12px;
 }

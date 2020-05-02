@@ -350,7 +350,44 @@ const Quiz = ({ id }) => {
     global.socket.on('game-invite', (game) => {
       if (global.store.mode !== 'recreate') {
         if (game.creator.id === global.store.game[global.store.game.vs].id) {
-          global.socket.emit('connect-to-online-game', game);
+          const deny = () => {
+            global.bus.emit('modal:close');
+          };
+
+          const accept = () => {
+            global.socket.emit('connect-to-online-game', game);
+          };
+
+          global.store.modal = (
+            <Div className="Recreate">
+              <div className="RecreateMessage">
+                <img
+                  src={global.store.game[global.store.game.vs].avatar}
+                  alt={global.store.game[global.store.game.vs].id}
+                  className="RecreateMessage__avatar"
+                />
+                <div className="RecreateMessage__content">
+                  <span>Йо, может реванш?</span>
+                  <img
+                    src={require(/* webpackPreload: true */ '../assets/vs.png')}
+                    alt=""
+                    className="RecreateMessage__icon"
+                  />
+                </div>
+              </div>
+              <div className="GameResult__content">
+                <Button onClick={deny} className="GameResult__button">Отклонить</Button>
+                <Button onClick={accept} className="GameResult__button Button--blue">Принять</Button>
+              </div>
+            </Div>
+          );
+
+          global.bus.emit('modal:update');
+
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            global.bus.emit('modal:show');
+          }, 600);
         }
       }
     });
@@ -361,7 +398,7 @@ const Quiz = ({ id }) => {
         ...game
       };
 
-      if (global.store.mode === 'multi') {
+      if (global.store.mode === 'multi' || global.store.mode === 'recreate') {
         const link = `${APP_LINK}#join-${global.store.game.id}`;
         const __html = qr.createQR(link, {
           qrSize: 272,
@@ -382,16 +419,18 @@ const Quiz = ({ id }) => {
         );
 
         global.bus.emit('modal:update');
-        timeout = setTimeout(() => {
-          global.bus.emit('modal:show');
-        }, 600);
-      }
 
-      if (global.store.mode === 'recreate') {
-        global.socket.emit('send-invite', {
-          game_id: global.store.game.id,
-          user_id: global.store.game[global.store.game.vs].id
-        });
+        if (global.store.mode === 'multi') {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            global.bus.emit('modal:show');
+          }, 600);
+        } else {
+          global.socket.emit('send-invite', {
+            game_id: global.store.game.id,
+            user_id: global.store.game[global.store.game.vs].id
+          });
+        }
       }
 
       setType('prepare');
@@ -426,9 +465,7 @@ const Quiz = ({ id }) => {
         global.store.game.opponent = Unknown;
       }
 
-      if (global.store.mode === 'multi') {
-        global.bus.emit('modal:close');
-      }
+      global.bus.emit('modal:close');
 
       setPoints({ creator: 0, opponent: 0 });
       setType('preview');
