@@ -18,8 +18,6 @@ const App = () => {
     });
 
     global.bus.on('game:end', () => {
-      global.bus.emit('app:update');
-
       window.requestAnimationFrame(() => {
         setView('home');
       });
@@ -30,7 +28,7 @@ const App = () => {
       global.bus.emit('game:start');
     };
 
-    const checkJoin = (location) => {
+    const checkJoinOrFetch = (location) => {
       const hash = /join-([0-9]+)/.exec(location);
       if (hash && hash[1]) {
         if (global.bridge.supports('VKWebAppSetLocation')) {
@@ -48,28 +46,30 @@ const App = () => {
         } else {
           global.bus.once('app:auth', join);
         }
+      } else {
+        global.bus.emit('app:update');
       }
     };
 
-    global.bridge.subscribe((e) => {
-      if (!e || !e.detail) {
+    global.bridge.subscribe((event) => {
+      if (!event || !event.detail) {
         return;
       }
 
-      switch (e.detail.type) {
+      switch (event.detail.type) {
         case 'VKWebAppLocationChanged':
-          checkJoin(e.detail.data.location);
+          checkJoinOrFetch(event.detail.data.location);
           break;
         case 'VKWebAppViewRestore':
-          checkJoin(window.location.hash);
+          checkJoinOrFetch(window.location.hash);
           break;
         case 'VKWebAppOpenCodeReaderResult':
-          checkJoin(e.detail.data.code_data);
+          checkJoinOrFetch(event.detail.data.code_data);
           break;
       }
     });
 
-    checkJoin(window.location.hash);
+    checkJoinOrFetch(window.location.hash);
   }, []);
 
   return (
