@@ -1,6 +1,3 @@
-import global from '../utils/global';
-import { APP_LINK, SHARE_MESSAGE } from './constants';
-
 export const interpretResponse = (response) => {
   while (response.data) {
     response = response.data;
@@ -25,28 +22,6 @@ export const shuffle = (arr) => {
   return array;
 };
 
-export const shareLink = (link = APP_LINK) => {
-  if (global.bridge.supports('VKWebAppShare')) {
-    global.bridge.send('VKWebAppShare', { link });
-  } else if ('share' in window.navigator) {
-    window.navigator.share({
-      title: document.title,
-      text: link
-    });
-  } else {
-    window.open(`https://vk.com/share.php?url=${link}`, '_blank');
-  }
-};
-
-export const shareMessage = (message = SHARE_MESSAGE) => {
-  if (global.bridge.supports('VKWebAppShowWallPostBox')) {
-    global.bridge.send('VKWebAppShowWallPostBox', { message });
-  } else if ('share' in window.navigator) {
-    window.navigator.share({
-      title: document.title,
-      text: message
-    });
-  } else {
-    window.open(`https://vk.com/share.php?url=${APP_LINK}`, '_blank');
-  }
+export const declOfNum = (n, titles) => {
+  return titles[(n % 10 === 1 && n % 100 !== 11) ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2];
 };

@@ -39,6 +39,7 @@ const global = {
     user: {},
     game: {},
     modal: null,
+    popout: null,
     mode: null,
     join: -1
   },

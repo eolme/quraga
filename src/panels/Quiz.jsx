@@ -6,13 +6,18 @@ import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
 import qr from '@vkontakte/vk-qr';
 
+import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
+import Icon28ShareOutline from '@vkontakte/icons/dist/28/share_outline';
+import Icon28LinkCircleOutline from '@vkontakte/icons/dist/28/link_circle_outline';
+
 import Countdown from 'react-countdown';
 import Timer from '../components/Timer';
 import Clock from '../components/Clock';
 import Button from '../components/Button';
 
 import { APP_LINK } from '../utils/constants';
-import { shareLink, shareMessage, shuffle } from '../utils/data';
+import { shuffle } from '../utils/data';
+import { shareWall, shareStory, shareLink, shareMessage } from '../utils/share';
 
 const Unknown = {
   avatar: require(/* webpackPreload: true */ '../assets/unknown.png'),
@@ -59,7 +64,40 @@ const Quiz = ({ id }) => {
   }, []);
 
   const referrer = useCallback(() => {
-    shareMessage();
+    if (global.store.game) {
+      global.store.popout = [];
+
+      if (global.bridge.supports('VKWebAppShowStoryBox')) {
+        global.store.popout.push({
+          icon: (<Icon28StoryOutline />),
+          label: 'В истории',
+          onClick: () => shareStory(points[global.store.game.is])
+        });
+      } else {
+        global.store.popout.push({
+          icon: (<Icon28LinkCircleOutline />),
+          label: 'Ссылкой',
+          onClick: () => shareLink()
+        });
+      }
+
+      if (global.bridge.supports('VKWebAppShowWallPostBox')) {
+        global.store.popout.push({
+          icon: (<Icon28ShareOutline />),
+          label: 'На стене',
+          onClick: () => shareWall()
+        });
+      } else {
+        global.store.popout.push({
+          icon: (<Icon28ShareOutline />),
+          label: 'На стене',
+          onClick: () => shareMessage()
+        });
+      }
+
+      global.bus.emit('popout:update');
+      global.bus.emit('popout:show');
+    }
   }, []);
 
   useEffect(() => {
