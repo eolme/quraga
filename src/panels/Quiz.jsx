@@ -779,7 +779,7 @@ const Quiz = ({id}) => {
         global.store.game[global.store.game.vs].id !== -1 &&
         (
           <FixedLayout vertical="bottom">
-            {emotions}
+            {global.store.mode === 'multi' && emotions}
 
             <div className="GamePlayers">
               <div className="GamePlayers--left">
