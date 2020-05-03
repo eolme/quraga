@@ -8,6 +8,7 @@ import Intro from '../panels/Intro';
 import Main from '../panels/Main';
 import Rating from '../panels/Rating';
 
+import PopoutProvider from '../components/PopoutProvider';
 import ModalProvider from '../components/ModalProvider';
 
 const getCurrentPanel = (accept) => accept ? 'main' : 'intro';
@@ -40,6 +41,7 @@ const Home = ({ id }) => {
       onSwipeBack={panels.goBack}
       id={id}
       modal={<ModalProvider />}
+      popout={<PopoutProvider />}
       header={false}
     >
       <Intro id="intro" callback={accept} />
