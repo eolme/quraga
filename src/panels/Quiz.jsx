@@ -1,8 +1,17 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
-import { Panel, Div, FixedLayout, PanelHeaderClose, usePlatform, ANDROID, classNames as cn } from '@vkontakte/vkui';
+import {
+  ANDROID,
+  classNames as cn,
+  Div,
+  FixedLayout,
+  Gallery,
+  Panel,
+  PanelHeaderClose,
+  usePlatform
+} from '@vkontakte/vkui';
 import transitionEvents from '@vkontakte/vkui/dist/lib/transitionEvents';
-import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import {CSSTransition, SwitchTransition} from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
 import qr from '@vkontakte/vk-qr';
 
@@ -11,8 +20,11 @@ import Timer from '../components/Timer';
 import Clock from '../components/Clock';
 import Button from '../components/Button';
 
-import { APP_LINK } from '../utils/constants';
-import { shareLink, shareMessage, shuffle } from '../utils/data';
+import {APP_LINK} from '../utils/constants';
+import {shareLink, shareMessage, shuffle} from '../utils/data';
+
+
+const EMOTION_SIZE = 40;
 
 const Unknown = {
   avatar: require(/* webpackPreload: true */ '../assets/unknown.png'),
@@ -26,7 +38,9 @@ const Sleeper = {
   id: -1
 };
 
-const Quiz = ({ id }) => {
+const emojiCount = 10;
+
+const Quiz = ({id}) => {
   const global = useGlobal();
   const platform = usePlatform();
   const [type, setType] = useState(null);
@@ -35,7 +49,114 @@ const Quiz = ({ id }) => {
   const [question, setQuestion] = useState(null);
   const [answer, setAnswer] = useState(null);
   const [percent, setPercent] = useState(50);
-  const [points, setPoints] = useState({ creator: 0, opponent: 0 });
+  const [points, setPoints] = useState({creator: 0, opponent: 0});
+
+  let particles = [];
+  let looped = false;
+
+  let canvas = null;
+  let ctx = null;
+  const images = {};
+
+  const canvasRef = useRef();
+
+  const getImage = (emoji) => {
+    if (!images[emoji]) {
+      images[emoji] = new Image(EMOTION_SIZE, EMOTION_SIZE);
+      images[emoji].src = emoji;
+    }
+
+    return images[emoji];
+  };
+
+  const createParticle = (emoji, fromId) => {
+
+    const fromElement = document.querySelector(`[data-user-id="${fromId}"]`);
+
+    if (!fromElement) {
+      return;
+    }
+
+    const size = 50;
+    const speedHorz = Math.random() * 10;
+    const speedUp = Math.random() * 25;
+    const spinVal = Math.random() * 360;
+    const spinSpeed = ((Math.random() * 35)) * (Math.random() <= .5 ? -1 : 1);
+    const top = fromElement.getBoundingClientRect().y;
+    const left = fromElement.getBoundingClientRect().x;
+    const direction = Math.random() <= .5 ? -1 : 1;
+
+    const image = getImage(emoji);
+
+    ctx.drawImage(image, left, top, EMOTION_SIZE, EMOTION_SIZE);
+
+    particles.push({
+      image,
+      size,
+      speedHorz,
+      speedUp,
+      spinVal,
+      spinSpeed,
+      top,
+      left,
+      direction,
+    });
+  };
+
+  const updateParticles = () => {
+
+    const height = canvas.height;
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+
+
+    particles.forEach((p) => {
+      ctx.save();
+
+      p.spinVal = p.spinVal + p.spinSpeed;
+      p.left = p.left - (p.speedHorz * p.direction);
+      p.top = p.top - p.speedUp;
+      p.speedUp = Math.min(p.size, p.speedUp - 1);
+
+
+      ctx.translate(p.left, p.top);
+      ctx.rotate(p.spinVal * Math.PI / 180);
+      ctx.translate((-p.image.width)/2, (-p.image.height)/2);
+
+
+      ctx.drawImage(p.image, 0, 0, EMOTION_SIZE, EMOTION_SIZE);
+
+      ctx.restore();
+
+
+      if (p.top >= height + EMOTION_SIZE) {
+        particles = particles.filter((o) => o !== p);
+        particles.slice(p, 1);
+      }
+    });
+  };
+
+  const loop = () => {
+    if (particles.length === 0) {
+      looped = false;
+      return;
+    }
+    looped = true;
+
+    updateParticles();
+
+    requestAnimationFrame(loop);
+  };
+
+
+  const runFountain = (imageUrl, fromId) => {
+    for (let i = 0; i < emojiCount; i++) {
+      createParticle(imageUrl, fromId);
+    }
+
+    if (!looped) {
+      loop();
+    }
+  };
 
   let immediateAnswered = false;
   const [renderAnswered, setRenderAnswered] = useState(false);
@@ -96,6 +217,39 @@ const Quiz = ({ id }) => {
       });
     }
   }, [answer]);
+
+  const emotions = useMemo(() => {
+
+    const onEmotionClick = (id) => {
+      global.socket.emit('react', {
+        game_id: global.store.game.id,
+        emotion_id: id
+      });
+    };
+
+    return (
+      <Gallery
+        slideWidth="90%"
+        style={{height: 60}}
+        bullets={false}
+        align="center"
+      >
+        {global.store.user.emotionPacks.map((emotionPack) => {
+          return (<div key={emotionPack.id} className="Emotions">
+            {emotionPack.emotions.map((emotion) => {
+              return (
+                <button className="Emotions__button" onClick={onEmotionClick.bind(null, emotion.id)} key={emotion.id}>
+                  <img
+                    alt={emotion.title}
+                    className="Emotions__image"
+                    src={emotion.url}/>
+                </button>);
+            })}
+          </div>);}
+        )}
+      </Gallery>
+    );
+  }, []);
 
   const answers = useMemo(() => {
     if (question) {
@@ -505,6 +659,13 @@ const Quiz = ({ id }) => {
       setType('result');
     });
 
+    global.socket.on('got-react', (data) => {
+      const emotionUrl = data.emotion_url;
+      const fromId = data.from_id;
+
+      runFountain(emotionUrl, fromId);
+    });
+
     switch (global.store.mode) {
       case 'single':
         global.socket.emit('start-offline-game');
@@ -526,6 +687,11 @@ const Quiz = ({ id }) => {
         global.bus.emit('game:end');
         return;
     }
+
+    canvas = canvasRef.current;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx = canvas.getContext('2d');
 
     return () => {
       clearTimeout(timeout);
@@ -552,6 +718,7 @@ const Quiz = ({ id }) => {
 
   return (
     <Panel id={id} separator={false} className="Panel--flex Panel--clear">
+      <canvas className="emotion-bg-canvas" ref={canvasRef}></canvas>
       <SwitchTransition mode="out-in">
         <CSSTransition
           key={memoType}
@@ -572,27 +739,33 @@ const Quiz = ({ id }) => {
         global.store.game &&
         global.store.game[global.store.game.vs].id !== -1 &&
         (
-          <FixedLayout vertical="bottom" className="GameOverlay">
+          <FixedLayout vertical="bottom">
+            {emotions}
+
             <div className="GamePlayers">
               <div className="GamePlayers--left">
-                <img
-                  src={global.store.game[global.store.game.is].avatar}
-                  alt={global.store.game[global.store.game.is].id}
-                  className="GamePlayers__avatar"
-                />
+                <div data-user-id={global.store.game[global.store.game.is].id}>
+                  <img
+                    src={global.store.game[global.store.game.is].avatar}
+                    alt={global.store.game[global.store.game.is].id}
+                    className="GamePlayers__avatar"
+                  />
+                </div>
                 <div>{global.store.game[global.store.game.is].first_name}</div>
               </div>
               <div className="GamePlayers--right">
                 <div>{global.store.game[global.store.game.vs].first_name}</div>
-                <img
-                  src={global.store.game[global.store.game.vs].avatar}
-                  alt={global.store.game[global.store.game.vs].id}
-                  className="GamePlayers__avatar"
-                />
+                <div data-user-id={global.store.game[global.store.game.vs].id}>
+                  <img
+                    src={global.store.game[global.store.game.vs].avatar}
+                    alt={global.store.game[global.store.game.vs].id}
+                    className="GamePlayers__avatar"
+                  />
+                </div>
               </div>
             </div>
             <div className="GamePercent">
-              <div className="GamePercent-in" style={{ transform: `translateX(${percent - 100}%)` }} />
+              <div className="GamePercent-in" style={{transform: `translateX(${percent - 100}%)`}}/>
             </div>
           </FixedLayout>
         )

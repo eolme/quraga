@@ -1007,3 +1007,29 @@
   height: 30px;
   margin-left: 12px;
 }
+
+
+.Emotions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Emotions__button {
+  display: block;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.Emotions__image {
+  margin: 0 15px;
+  height: 50px;
+  width: auto;
+}
+
+.emotion-bg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
