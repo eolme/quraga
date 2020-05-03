@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { ModalRoot, ModalPage, ModalPageHeader, withModalRootContext } from '@vkontakte/vkui';
 import useGlobal from '../hooks/use-global';
 
@@ -13,6 +14,11 @@ const ModalConsumer = withModalRootContext(({ by, updateModalHeight }) => {
 
   return (<>{global.store.modal}</>);
 });
+
+ModalConsumer.propTypes = {
+  by: PropTypes.number.isRequired,
+  updateModalHeight: PropTypes.func
+};
 
 const ModalProvider = () => {
   const global = useGlobal();

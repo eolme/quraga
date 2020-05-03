@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { View } from '@vkontakte/vkui';
 
 import Quiz from '../panels/Quiz';
+
+import PopoutProvider from '../components/PopoutProvider';
 import ModalProvider from '../components/ModalProvider';
 
 import { swipe } from '../utils/events';
@@ -22,8 +24,9 @@ const Game = ({ id }) => {
     <View
       activePanel="quiz"
       id={id}
-      header={false}
       modal={<ModalProvider />}
+      popout={<PopoutProvider />}
+      header={false}
     >
       <Quiz id="quiz" />
     </View>

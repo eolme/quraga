@@ -34,7 +34,10 @@ const Base = () => {
         const user = interpretResponse(response);
         user.created = response.status === 200;
 
-        global.store.user = user;
+        global.store.user = {
+          ...global.store.user,
+          ...user
+        };
         global.bus.emit('app:auth', global.store.user);
       });
     };
