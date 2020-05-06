@@ -33,7 +33,7 @@ const Intro = ({ id, callback }) => {
               <Logo className="IntroPreview--image" />
             </div>
             <h1 className="PanelTitle">Привет, друг!</h1>
-            <div>
+            <div className="IntroContent">
               Это QURAGA - интеллектуальная
               игра, в которой можно бросить
               вызов своим друзьям и
@@ -69,6 +69,19 @@ const Intro = ({ id, callback }) => {
               различных категорий
             </h1>
           </Div>
+          <Div>
+            <div className="IntroPreview">
+              <img
+                src={require(/* webpackPreload: true */ '../assets/emoji.png')}
+                alt="Эмоции"
+                className="IntroPreview--image IntroPreview--top"
+              />
+            </div>
+            <h1 className="PanelTitle">
+              Атакуй своего соперника смайл-киками
+              и сбивай его с толку!
+            </h1>
+          </Div>
         </Gallery>
       </CSSTransition>
       <CSSTransition in={true} appear={true} classNames="fade" timeout={platform === ANDROID ? 300 : 600}>
@@ -77,10 +90,12 @@ const Intro = ({ id, callback }) => {
             <div className={cn('IntroOverlay__pagination-bullet', tab === 0 && 'IntroOverlay__pagination-bullet--active')}></div>
             <div className={cn('IntroOverlay__pagination-bullet', tab === 1 && 'IntroOverlay__pagination-bullet--active')}></div>
             <div className={cn('IntroOverlay__pagination-bullet', tab === 2 && 'IntroOverlay__pagination-bullet--active')}></div>
+            <div className={cn('IntroOverlay__pagination-bullet', tab === 3 && 'IntroOverlay__pagination-bullet--active')}></div>
           </div>
-          {tab === 0 && (<Button onClick={tabOnClick.bind(null, 1)} className="Layout--bottom">Отлично</Button>)}
-          {tab === 1 && (<Button onClick={tabOnClick.bind(null, 2)} className="Layout--bottom">Вперёд</Button>)}
-          {tab === 2 && (<Button onClick={callback} data-to="home" className="Layout--bottom">Поехали</Button>)}
+          {tab === 0 && (<Button onClick={tabOnClick.bind(null, 1)} className="Layout--bottom IntroOverlay__button">Отлично</Button>)}
+          {tab === 1 && (<Button onClick={tabOnClick.bind(null, 2)} className="Layout--bottom IntroOverlay__button">Вперёд</Button>)}
+          {tab === 2 && (<Button onClick={tabOnClick.bind(null, 3)} className="Layout--bottom IntroOverlay__button">Поехали</Button>)}
+          {tab === 3 && (<Button onClick={callback} data-to="home" className="Layout--bottom IntroOverlay__button">Готов</Button>)}
         </div>
       </CSSTransition>
     </Panel>
