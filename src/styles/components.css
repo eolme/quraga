@@ -4,12 +4,29 @@
   font-weight: 800;
   font-size: 32px;
   line-height: 44px;
+
+  display: block;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 @media (min-width: 374px) {
   .PanelTitle {
     font-size: 36px;
     line-height: 44px;
+  }
+}
+
+@media (min-width: 480px) {
+  .PanelTitle {
+    max-width: 430px;
+    margin: 12px auto 24px auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .PanelTitle {
+    max-width: 700px;
   }
 }
 
@@ -59,11 +76,21 @@
   display: flex;
 }
 
+@media (min-width: 700px) {
+  .IntroPreview {
+    height: 252px;
+  }
+}
+
 .IntroPreview--image {
   display: block;
   max-width: 100%;
   max-height: 100%;
   margin: auto;
+}
+
+.IntroPreview--top {
+  margin-top: -12px;
 }
 
 .IntroOverlay {
@@ -114,6 +141,19 @@
   touch-action: pan-x;
 }
 
+@media (min-width: 480px) {
+  .IntroOverlay__pagination {
+    max-width: 430px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .IntroOverlay__pagination {
+    max-width: 700px;
+  }
+}
+
 @media (min-height: 590px) {
   .IntroOverlay__pagination {
     display: flex;
@@ -155,6 +195,27 @@
   opacity: 1;
 }
 
+.IntroContent,
+.IntroOverlay__button {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+@media (min-width: 480px) {
+  .IntroContent,
+  .IntroOverlay__button {
+    max-width: 430px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .IntroContent,
+  .IntroOverlay__button {
+    max-width: 700px;
+  }
+}
+
 .Root .RatingInline,
 .Root--ios .RatingInline {
   margin: 0 -12px;
@@ -175,6 +236,26 @@
     margin: 0 -24px;
     padding: 0 24px;
     width: calc(100% + 48px);
+  }
+}
+
+@media (min-width: 480px) {
+  .Root .RatingInline,
+  .Root--ios .RatingInline,
+  .Root--android .RatingInline {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    flex-shrink: 0;
+    max-width: 430px;
+  }
+}
+
+@media (min-width: 700px) {
+  .Root .RatingInline,
+  .Root--ios .RatingInline,
+  .Root--android .RatingInline {
+    max-width: 700px;
   }
 }
 
@@ -244,9 +325,19 @@
   justify-content: center;
   align-content: stretch;
   align-items: stretch;
+}
 
-  max-width: 430px;
-  margin: 0 auto;
+@media (min-width: 480px) {
+  .Play-in {
+    max-width: 430px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .Play-in {
+    max-width: 700px;
+  }
 }
 
 .Play__item {
@@ -382,9 +473,17 @@
   margin-right: -10px;
 }
 
-.History-in {
-  max-width: 430px;
-  margin: 0 auto;
+@media (min-width: 480px) {
+  .History-in {
+    max-width: 430px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .History-in {
+    max-width: 700px;
+  }
 }
 
 .History__content {
@@ -485,9 +584,17 @@
   margin-top: 40px;
 }
 
-.Rating-in {
-  max-width: 430px;
-  margin: 0 auto;
+@media (min-width: 480px) {
+  .Rating-in {
+    max-width: 430px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .Rating-in {
+    max-width: 700px;
+  }
 }
 
 .Rating__content {
@@ -498,6 +605,12 @@
   padding: 8px 0;
 
   background-color: var(--app-table);
+}
+
+@media (min-width: 480px) {
+  .Rating__content {
+    margin: 0;
+  }
 }
 
 .Rating__item {
@@ -890,11 +1003,26 @@
   align-items: stretch;
 }
 
+@media (min-width: 480px) {
+  .GameResult__content {
+    max-width: 430px;
+    margin: 0 auto;
+    width: 100%;
+    flex-shrink: 0;
+  }
+}
+
+@media (min-width: 700px) {
+  .GameResult__content {
+    max-width: 700px;
+  }
+}
+
 .GameResult__button {
   flex-grow: 1;
   flex-shrink: 0;
   min-width: 0;
-  max-width: 430px;
+
   white-space: nowrap;
 }
 

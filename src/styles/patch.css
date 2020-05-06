@@ -84,6 +84,21 @@ img {
   background: transparent;
 }
 
+@media (min-width: 480px) {
+  .Tabs {
+    width: 100%;
+    flex-shrink: 0;
+    max-width: 462px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 700px) {
+  .Tabs {
+    max-width: 732px;
+  }
+}
+
 .ModalPage {
   --text_primary: #3E3E3E;
   --text_secondary: #818c99;
