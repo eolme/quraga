@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ModalRoot, ModalPage, ModalPageHeader, withModalRootContext } from '@vkontakte/vkui';
 import useGlobal from '../hooks/use-global';
@@ -12,7 +12,7 @@ const ModalConsumer = withModalRootContext(({ by, updateModalHeight }) => {
     });
   }, [by]);
 
-  return (<>{global.store.modal}</>);
+  return (<>{global.store.modal.content}</>);
 });
 
 ModalConsumer.propTypes = {
@@ -24,8 +24,9 @@ const ModalProvider = () => {
   const global = useGlobal();
   const [updateCounter, setUpdateCounter] = useState(0);
   const [activeModal, setActiveModal] = useState(null);
+  const mountedRef = useRef();
 
-  const show = useCallback(() => {
+  const open = useCallback(() => {
     window.requestAnimationFrame(() => {
       setActiveModal('modal');
     });
@@ -36,6 +37,26 @@ const ModalProvider = () => {
       setActiveModal(null);
     });
   }, []);
+
+  useEffect(() => {
+    if (mountedRef.current) {
+      if (activeModal) {
+        window.requestAnimationFrame(() => {
+          global.bus.emit('modal:opened');
+        });
+      } else {
+        window.requestAnimationFrame(() => {
+          global.bus.emit('modal:closed');
+        });
+      }
+    }
+  }, [activeModal]);
+
+  useEffect(() => {
+    if (mountedRef.current) {
+      global.bus.emit('modal:updated');
+    }
+  }, [updateCounter]);
 
   useEffect(() => {
     const update = () => {
@@ -52,11 +73,15 @@ const ModalProvider = () => {
   }, [updateCounter]);
 
   useEffect(() => {
-    global.bus.on('modal:show', show);
+    mountedRef.current = true;
+
+    global.bus.on('modal:open', open);
     global.bus.on('modal:close', close);
 
     return () => {
-      global.bus.detach('modal:show', show);
+      mountedRef.current = false;
+
+      global.bus.detach('modal:open', open);
       global.bus.detach('modal:close', close);
     };
   }, []);

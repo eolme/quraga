@@ -1,4 +1,4 @@
-import bridge from '@vkontakte/vk-bridge';
+import bridge from './bridge';
 
 export const vibrate = {
   result() {

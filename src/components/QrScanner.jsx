@@ -9,7 +9,7 @@ const QrScanner = ({ className }) => {
   const global = useGlobal();
 
   const openScanner = useCallback(() => {
-    global.bridge.send('VKWebAppOpenCodeReader', {});
+    global.bridge.send('VKWebAppOpenCodeReader');
   }, []);
 
   if (global.bridge.supports('VKWebAppOpenCodeReader')) {

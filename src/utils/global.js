@@ -1,7 +1,7 @@
 import Bus from 'js-event-bus';
 import axios from './axios';
 import io from 'socket.io-client';
-import bridge from '@vkontakte/vk-bridge';
+import bridge from './bridge';
 import storage from './storage';
 import * as effects from './effects';
 
@@ -38,8 +38,8 @@ const global = {
     persist: {},
     user: {},
     game: {},
-    modal: null,
-    popout: null,
+    modal: { state: false, content: null },
+    popout: { state: false, content: null },
     mode: null,
     join: -1
   },

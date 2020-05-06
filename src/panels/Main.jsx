@@ -8,6 +8,8 @@ import Social from '../components/Social';
 import History from '../components/History';
 import QrScanner from '../components/QrScanner';
 
+import { ReactComponent as Arrow } from '../assets/arrow.svg';
+
 import useGlobal from '../hooks/use-global';
 import { interpretResponse } from '../utils/data';
 
@@ -114,9 +116,7 @@ const Main = ({ id, callback }) => {
                   <div className="RatingInline__item">
                     <div className="RatingInline__item-caption">&nbsp;</div>
                     <div className="RatingInline__item-content">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 22" fill="none" className="Arrow">
-                        <path stroke="#fff" strokeLinecap="round" strokeWidth="2" d="M1 1l11 9.2a1 1 0 010 1.6L1 21"/>
-                      </svg>
+                      <Arrow className="Arrow" />
                     </div>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ const Main = ({ id, callback }) => {
                       Одиночная игра
                     </div>
                   </Tappable>
-                  <Tappable className="Play__item Play__item--multi"  onClick={startGame.bind(null, 'multi')}>
+                  <Tappable className="Play__item Play__item--multi" onClick={startGame.bind(null, 'multi')}>
                     <div className="Play__item-caption">
                       vs
                     </div>

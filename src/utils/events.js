@@ -54,3 +54,37 @@ export const swipe = {
     });
   }
 };
+
+export const resize = {
+  _inited: false,
+  _init() {
+    if (this._inited) {
+      return;
+    }
+
+    let ticking = false;
+    const tick = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          global.bus.emit('resize');
+
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('resize', tick, PARAM_PASSIVE);
+  },
+  attach(fn) {
+    global.bus.on('resize', fn);
+
+    this._init();
+    window.requestAnimationFrame(fn);
+
+    return () => {
+      global.bus.detach('resize', fn);
+    };
+  }
+};

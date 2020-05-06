@@ -1,18 +1,20 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ANDROID,
   classNames as cn,
   Div,
   FixedLayout,
-  Gallery,
   Panel,
   PanelHeaderClose,
-  usePlatform
+  usePlatform,
+  Tappable,
+  Spinner
 } from '@vkontakte/vkui';
 import transitionEvents from '@vkontakte/vkui/dist/lib/transitionEvents';
-import {CSSTransition, SwitchTransition} from 'react-transition-group';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
+import useDOMRef from '../hooks/use-dom-ref';
 import qr from '@vkontakte/vk-qr';
 
 import Icon28StoryOutline from '@vkontakte/icons/dist/28/story_outline';
@@ -24,13 +26,10 @@ import Timer from '../components/Timer';
 import Clock from '../components/Clock';
 import Button from '../components/Button';
 
-
-const EMOTION_SIZE = 40;
-
-import { APP_LINK } from '../utils/constants';
+import { APP_LINK, EMOTION_SIZE, EMOTION_COUNT } from '../utils/constants';
 import { shuffle } from '../utils/data';
+import { resize } from '../utils/events';
 import { shareWall, shareStory, shareLink, shareMessage } from '../utils/share';
-
 
 const Unknown = {
   avatar: require(/* webpackPreload: true */ '../assets/unknown.png'),
@@ -44,8 +43,6 @@ const Sleeper = {
   id: -1
 };
 
-const emojiCount = 10;
-
 const Quiz = ({id}) => {
   const global = useGlobal();
   const platform = usePlatform();
@@ -57,112 +54,9 @@ const Quiz = ({id}) => {
   const [percent, setPercent] = useState(50);
   const [points, setPoints] = useState({creator: 0, opponent: 0});
 
-  let particles = [];
-  let looped = false;
-
-  let canvas = null;
-  let ctx = null;
-  const images = {};
-
-  const canvasRef = useRef();
-
-  const getImage = (emoji) => {
-    if (!images[emoji]) {
-      images[emoji] = new Image(EMOTION_SIZE, EMOTION_SIZE);
-      images[emoji].src = emoji;
-    }
-
-    return images[emoji];
-  };
-
-  const createParticle = (emoji, fromId) => {
-
-    const fromElement = document.querySelector(`[data-user-id="${fromId}"]`);
-
-    if (!fromElement) {
-      return;
-    }
-
-    const size = 50;
-    const speedHorz = Math.random() * 10;
-    const speedUp = Math.random() * 25;
-    const spinVal = Math.random() * 360;
-    const spinSpeed = ((Math.random() * 35)) * (Math.random() <= .5 ? -1 : 1);
-    const top = fromElement.getBoundingClientRect().y;
-    const left = fromElement.getBoundingClientRect().x;
-    const direction = Math.random() <= .5 ? -1 : 1;
-
-    const image = getImage(emoji);
-
-    ctx.drawImage(image, left, top, EMOTION_SIZE, EMOTION_SIZE);
-
-    particles.push({
-      image,
-      size,
-      speedHorz,
-      speedUp,
-      spinVal,
-      spinSpeed,
-      top,
-      left,
-      direction,
-    });
-  };
-
-  const updateParticles = () => {
-
-    const height = canvas.height;
-    ctx.clearRect(0,0, canvas.width, canvas.height);
-
-
-    particles.forEach((p) => {
-      ctx.save();
-
-      p.spinVal = p.spinVal + p.spinSpeed;
-      p.left = p.left - (p.speedHorz * p.direction);
-      p.top = p.top - p.speedUp;
-      p.speedUp = Math.min(p.size, p.speedUp - 1);
-
-
-      ctx.translate(p.left, p.top);
-      ctx.rotate(p.spinVal * Math.PI / 180);
-      ctx.translate((-p.image.width)/2, (-p.image.height)/2);
-
-
-      ctx.drawImage(p.image, 0, 0, EMOTION_SIZE, EMOTION_SIZE);
-
-      ctx.restore();
-
-
-      if (p.top >= height + EMOTION_SIZE) {
-        particles = particles.filter((o) => o !== p);
-        particles.slice(p, 1);
-      }
-    });
-  };
-
-  const loop = () => {
-    if (particles.length === 0) {
-      looped = false;
-      return;
-    }
-    looped = true;
-
-    updateParticles();
-
-    requestAnimationFrame(loop);
-  };
-
-
-  const runFountain = (imageUrl, fromId) => {
-    for (let i = 0; i < emojiCount; i++) {
-      createParticle(imageUrl, fromId);
-    }
-
-    if (!looped) {
-      loop();
-    }
-  };
+  const [canvasEl, canvasRef] = useDOMRef();
+  const [targetIsEl, targetIsRef] = useDOMRef();
+  const [targetVsEl, targetVsRef] = useDOMRef();
 
   let immediateAnswered = false;
   const [renderAnswered, setRenderAnswered] = useState(false);
@@ -174,7 +68,7 @@ const Quiz = ({id}) => {
 
   const exit = useCallback(() => {
     global.store.mode = null;
-    global.store.game = null;
+    global.store.game = {};
     global.store.join = -1;
 
     global.bus.emit('game:end');
@@ -193,7 +87,15 @@ const Quiz = ({id}) => {
         global.store.popout.push({
           icon: (<Icon28StoryOutline />),
           label: 'В истории',
-          onClick: () => shareStory(points[global.store.game.is])
+          onClick: () => {
+            const last = type;
+            setType('loading');
+            shareStory(points[global.store.game.is]).then(() => {
+              setType(last);
+            }).catch(() => {
+              setType(last);
+            });
+          }
         });
       } else {
         global.store.popout.push({
@@ -207,7 +109,15 @@ const Quiz = ({id}) => {
         global.store.popout.push({
           icon: (<Icon28ShareOutline />),
           label: 'На стене',
-          onClick: () => shareWall()
+          onClick: () => {
+            const last = type;
+            setType('loading');
+            shareWall().then(() => {
+              setType(last);
+            }).catch(() => {
+              setType(last);
+            });
+          }
         });
       } else {
         global.store.popout.push({
@@ -220,7 +130,7 @@ const Quiz = ({id}) => {
       global.bus.emit('popout:update');
       global.bus.emit('popout:show');
     }
-  }, []);
+  }, [points, type]);
 
   useEffect(() => {
     if (global.store.game) {
@@ -256,39 +166,6 @@ const Quiz = ({id}) => {
       });
     }
   }, [answer]);
-
-  const emotions = useMemo(() => {
-
-    const onEmotionClick = (id) => {
-      global.socket.emit('react', {
-        game_id: global.store.game.id,
-        emotion_id: id
-      });
-    };
-
-    return (
-      <Gallery
-        slideWidth="90%"
-        style={{height: 60}}
-        bullets={false}
-        align="center"
-      >
-        {global.store.user.emotionPacks.map((emotionPack) => {
-          return (<div key={emotionPack.id} className="Emotions">
-            {emotionPack.emotions.map((emotion) => {
-              return (
-                <button className="Emotions__button" onClick={onEmotionClick.bind(null, emotion.id)} key={emotion.id}>
-                  <img
-                    alt={emotion.title}
-                    className="Emotions__image"
-                    src={emotion.url}/>
-                </button>);
-            })}
-          </div>);}
-        )}
-      </Gallery>
-    );
-  }, []);
 
   const answers = useMemo(() => {
     if (question) {
@@ -360,10 +237,11 @@ const Quiz = ({id}) => {
                   <div className="GameResult__caption">{global.store.user.first_name}</div>
                 </div>
                 <div className="GameResult__item">
+                  <div className="GameResult__avatar" />
                   <img
                     src={Sleeper.avatar}
                     alt={Sleeper.id}
-                    className="GameResult__avatar"
+                    className="GameResult__fake"
                   />
                   <div className="GameResult__caption">{Sleeper.first_name}</div>
                 </div>
@@ -372,7 +250,7 @@ const Quiz = ({id}) => {
               <FixedLayout vertical="bottom">
                 <Div>
                   <div className="GameResult__content">
-                    <Button onClick={() => global.bus.emit('modal:show')} className="GameResult__button">Показать QR-код</Button>
+                    <Button onClick={() => global.bus.emit('modal:open')} className="GameResult__button">Показать QR-код</Button>
                   </div>
                 </Div>
               </FixedLayout>
@@ -386,7 +264,7 @@ const Quiz = ({id}) => {
               <Countdown
                 key={global.store.game.id}
                 renderer={Clock}
-                date={Date.now() + global.store.game.ttw * 1000}
+                date={global.store.game.ttw}
               />
               <div className="GameResult">
                 <div className="GameResult__item">
@@ -398,11 +276,24 @@ const Quiz = ({id}) => {
                   <div className="GameResult__caption">{global.store.game[global.store.game.is].first_name}</div>
                 </div>
                 <div className="GameResult__item">
-                  <img
-                    src={global.store.game[global.store.game.vs].avatar}
-                    alt={global.store.game[global.store.game.vs].id}
-                    className="GameResult__avatar"
-                  />
+                  {
+                    global.store.game[global.store.game.vs].id === -1 ? (
+                      <>
+                        <div className="GameResult__avatar" />
+                        <img
+                          src={global.store.game[global.store.game.vs].avatar}
+                          alt={global.store.game[global.store.game.vs].id}
+                          className="GameResult__fake"
+                        />
+                      </>
+                    ) : (
+                      <img
+                        src={global.store.game[global.store.game.vs].avatar}
+                        alt={global.store.game[global.store.game.vs].id}
+                        className="GameResult__avatar"
+                      />
+                    )
+                  }
                   <div className="GameResult__caption">{global.store.game[global.store.game.vs].first_name}</div>
                 </div>
                 <div className="GameResult__versus">vs</div>
@@ -520,7 +411,12 @@ const Quiz = ({id}) => {
                   <div className="GameResult__content">
                     {
                       global.store.mode !== 'single' && (
-                        <Button onClick={recreate} className="GameResult__button">Реванш!</Button>
+                        <Button onClick={recreate} className="GameResult__button">
+                          {
+                            points[global.store.game.is] < points[global.store.game.vs] ?
+                              'Реванш!' : 'Ещё одну!'
+                          }
+                        </Button>
                       )
                     }
                     <Button onClick={referrer} className="GameResult__button">Поделиться</Button>
@@ -531,7 +427,7 @@ const Quiz = ({id}) => {
           );
           return;
         default:
-          setView(null);
+          setView(<Spinner size="large" />);
           return;
       }
     });
@@ -551,7 +447,11 @@ const Quiz = ({id}) => {
             global.socket.emit('connect-to-online-game', game);
           };
 
-          global.store.modal = (
+          global.bus.once('modal:updated', () => {
+            global.bus.emit('modal:open');
+          });
+
+          global.store.modal.content = (
             <Div className="Recreate">
               <div className="RecreateMessage">
                 <img
@@ -560,7 +460,10 @@ const Quiz = ({id}) => {
                   className="RecreateMessage__avatar"
                 />
                 <div className="RecreateMessage__content">
-                  <span>Йо, может реванш?</span>
+                  <span>Йо, {
+                    points[global.store.game.is] < points[global.store.game.vs] ?
+                      'может реванш' : 'ещё одну'
+                  }?</span>
                   <img
                     src={require(/* webpackPreload: true */ '../assets/vs.png')}
                     alt=""
@@ -574,13 +477,7 @@ const Quiz = ({id}) => {
               </div>
             </Div>
           );
-
           global.bus.emit('modal:update');
-
-          clearTimeout(timeout);
-          timeout = setTimeout(() => {
-            global.bus.emit('modal:show');
-          }, 600);
         }
       }
     });
@@ -601,7 +498,22 @@ const Quiz = ({id}) => {
         });
         const share = () => shareLink(link);
 
-        global.store.modal = (
+        global.bus.once('modal:updated', () => {
+          if (global.store.mode === 'multi') {
+            window.requestAnimationFrame(() => {
+              setTimeout(() => {
+                global.bus.emit('modal:open');
+              }, 600);
+            });
+          } else {
+            global.socket.emit('send-invite', {
+              game_id: global.store.game.id,
+              user_id: global.store.game[global.store.game.vs].id
+            });
+          }
+        });
+
+        global.store.modal.content = (
           <Div>
             <div className="QrCode" dangerouslySetInnerHTML={{ __html }} />
             <div className="QrCode__info">
@@ -610,20 +522,7 @@ const Quiz = ({id}) => {
             <Button onClick={share} className="Button--blue">Поделиться ссылкой</Button>
           </Div>
         );
-
         global.bus.emit('modal:update');
-
-        if (global.store.mode === 'multi') {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => {
-            global.bus.emit('modal:show');
-          }, 600);
-        } else {
-          global.socket.emit('send-invite', {
-            game_id: global.store.game.id,
-            user_id: global.store.game[global.store.game.vs].id
-          });
-        }
       }
 
       setType('prepare');
@@ -658,6 +557,8 @@ const Quiz = ({id}) => {
         global.store.game.opponent = Unknown;
       }
 
+      global.store.game.ttw = Date.now() + global.store.game.ttw * 1000 - 300;
+
       global.bus.emit('modal:close');
 
       setPoints({ creator: 0, opponent: 0 });
@@ -671,7 +572,7 @@ const Quiz = ({id}) => {
     global.socket.on('new-question', (ask) => {
       ++global.store.game.current;
 
-      ask.ttw = Date.now() + ask.ttw * 1000;
+      ask.ttw = Date.now() + ask.ttw * 1000 - 300;
       ask.order = global.store.game.current;
       ask.answers = shuffle(ask.answers);
 
@@ -698,13 +599,6 @@ const Quiz = ({id}) => {
       setType('result');
     });
 
-    global.socket.on('got-react', (data) => {
-      const emotionUrl = data.emotion_url;
-      const fromId = data.from_id;
-
-      runFountain(emotionUrl, fromId);
-    });
-
     switch (global.store.mode) {
       case 'single':
         global.socket.emit('start-offline-game');
@@ -727,15 +621,9 @@ const Quiz = ({id}) => {
         return;
     }
 
-    canvas = canvasRef.current;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx = canvas.getContext('2d');
-
     return () => {
       clearTimeout(timeout);
       global.bus.emit('modal:close');
-      global.store.modal = null;
 
       global.socket.off('game-invite');
       global.socket.off('game-created');
@@ -747,6 +635,197 @@ const Quiz = ({id}) => {
     };
   }, []);
 
+  const emotions = useMemo(() => {
+    const onEmotionClick = (id) => {
+      global.socket.emit('react', {
+        game_id: global.store.game.id,
+        emotion_id: id
+      });
+    };
+
+    return global.store.user.emotionPacks.slice(0, 1).map((emotionPack) => {
+      return (
+        <div key={emotionPack.id} className="Emotions">
+          {emotionPack.emotions.map((emotion) => {
+            return (
+              <Tappable className="Emotions__button" onClick={onEmotionClick.bind(null, emotion.id)} key={emotion.id}>
+                <img
+                  className="Emotions__image"
+                  alt={emotion.title}
+                  src={emotion.url}
+                />
+              </Tappable>
+            );
+          })}
+        </div>
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasEl;
+    if (!canvas) {
+      return;
+    }
+
+    const resizeCanvas = () => {
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+    };
+
+    const detach = resize.attach(resizeCanvas);
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    const images = {};
+
+    let looped = false;
+    let cancel = false;
+    let frame = null;
+
+    const getImage = (emoji) => {
+      return new Promise((resolve, reject) => {
+        if (images[emoji]) {
+          resolve(images[emoji]);
+        } else {
+          const img = new Image(EMOTION_SIZE, EMOTION_SIZE);
+          img.onload = () => {
+            images[emoji] = img;
+            resolve(images[emoji]);
+          };
+          img.onerror = () => {
+            reject();
+          };
+          img.src = emoji;
+        }
+      });
+    };
+
+    const createParticleConfig = (x, y) => {
+      return new Promise((resolve) => {
+        const size = 50;
+        const speedHorz = Math.random() * 10;
+        const speedUp = Math.random() * 25;
+        const spinVal = Math.random() * 360;
+        const spinSpeed = ((Math.random() * 10)) * (Math.random() <= .5 ? -1 : 1);
+        const direction = Math.random() <= .5 ? -1 : 1;
+
+        resolve({
+          size,
+          speedHorz,
+          speedUp,
+          spinVal,
+          spinSpeed,
+          direction,
+          top: y,
+          left: x
+        });
+      });
+    };
+
+    const createParticle = (emoji, x, y) => {
+      return Promise.all([
+        getImage(emoji),
+        createParticleConfig(x, y)
+      ]).then(([image, config]) => {
+        ctx.drawImage(image, config.left, config.top, EMOTION_SIZE, EMOTION_SIZE);
+        config.image = image;
+        particles.push(config);
+      });
+    };
+
+    const updateParticles = () => {
+      const height = canvas.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p) => {
+        ctx.save();
+
+        p.spinVal = p.spinVal + p.spinSpeed;
+        p.left = p.left - (p.speedHorz * p.direction);
+        p.top = p.top - p.speedUp;
+        p.speedUp = Math.min(p.size, p.speedUp - 1);
+
+        ctx.translate(p.left, p.top);
+        ctx.rotate(p.spinVal * Math.PI / 180);
+        ctx.translate((-p.image.width) / 2, (-p.image.height) / 2);
+
+        ctx.drawImage(p.image, 0, 0, EMOTION_SIZE, EMOTION_SIZE);
+
+        ctx.restore();
+
+        if (p.top >= height + EMOTION_SIZE) {
+          particles = particles.filter((o) => o !== p);
+          particles.slice(p, 1);
+        }
+      });
+    };
+
+    const loop = () => {
+      if (particles.length === 0) {
+        looped = false;
+        return;
+      }
+
+      looped = true;
+      updateParticles();
+      frame = window.requestAnimationFrame(loop);
+    };
+
+    const getRect = (fromId) => {
+      if (global.store.game) {
+        if (fromId === global.store.game[global.store.game.is].id) {
+          if (targetIsEl) {
+            return targetIsEl.getBoundingClientRect();
+          }
+        }
+
+        if (fromId === global.store.game[global.store.game.vs].id) {
+          if (targetVsEl) {
+            return targetVsEl.getBoundingClientRect();
+          }
+        }
+      }
+
+      return null;
+    };
+
+    const runFountain = (imageUrl, fromId) => {
+      const rect = getRect(fromId);
+
+      if (rect) {
+        const chain = [];
+
+        for (let i = 0; i < EMOTION_COUNT; ++i) {
+          chain.push(createParticle(imageUrl, rect.x, rect.y));
+        }
+
+        return Promise.all(chain).then(() => {
+          if (cancel) {
+            return;
+          }
+
+          if (!looped) {
+            loop();
+          }
+        });
+      }
+    };
+
+    global.socket.on('got-react', (data) => {
+      runFountain(data.emotion_url, data.from_id);
+    });
+
+    return () => {
+      cancel = true;
+      window.cancelAnimationFrame(frame);
+      detach();
+      global.socket.off('got-react');
+    };
+  }, [canvasEl, targetIsEl, targetVsEl]);
+
   const memoType = useMemo(() => {
     if (type === 'question') {
       return `${type}-${question.order}`;
@@ -757,7 +836,6 @@ const Quiz = ({id}) => {
 
   return (
     <Panel id={id} separator={false} className="Panel--flex Panel--clear">
-      <canvas className="emotion-bg-canvas" ref={canvasRef}></canvas>
       <SwitchTransition mode="out-in">
         <CSSTransition
           key={memoType}
@@ -778,35 +856,35 @@ const Quiz = ({id}) => {
         global.store.game &&
         global.store.game[global.store.game.vs].id !== -1 &&
         (
-          <FixedLayout vertical="bottom">
-            {global.store.mode === 'multi' && emotions}
-
-            <div className="GamePlayers">
-              <div className="GamePlayers--left">
-                <div data-user-id={global.store.game[global.store.game.is].id}>
+          <>
+            <canvas className="emotion-bg-canvas" ref={canvasRef} />
+            <FixedLayout vertical="bottom">
+              {global.store.mode !== 'single' && emotions}
+              <div className="GamePlayers">
+                <div className="GamePlayers--left">
                   <img
+                    ref={targetIsRef}
                     src={global.store.game[global.store.game.is].avatar}
                     alt={global.store.game[global.store.game.is].id}
                     className="GamePlayers__avatar"
                   />
+                  <div>{global.store.game[global.store.game.is].first_name}</div>
                 </div>
-                <div>{global.store.game[global.store.game.is].first_name}</div>
-              </div>
-              <div className="GamePlayers--right">
-                <div>{global.store.game[global.store.game.vs].first_name}</div>
-                <div data-user-id={global.store.game[global.store.game.vs].id}>
+                <div className="GamePlayers--right">
+                  <div>{global.store.game[global.store.game.vs].first_name}</div>
                   <img
+                    ref={targetVsRef}
                     src={global.store.game[global.store.game.vs].avatar}
                     alt={global.store.game[global.store.game.vs].id}
                     className="GamePlayers__avatar"
                   />
                 </div>
               </div>
-            </div>
-            <div className="GamePercent">
-              <div className="GamePercent-in" style={{transform: `translateX(${percent - 100}%)`}}/>
-            </div>
-          </FixedLayout>
+              <div className="GamePercent">
+                <div className="GamePercent-in" style={{ transform: `translateX(${percent - 100}%)` }}/>
+              </div>
+            </FixedLayout>
+          </>
         )
       }
       {

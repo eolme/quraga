@@ -1,7 +1,8 @@
 export const APP_LINK = 'https://vk.com/app7403549';
+export const APP_SUPPORT = 'https://vk.me/petrov.engineer';
 export const APP_ID = 7403549;
 
-export const SHARE_MESSAGE = `Заходи на QURAGU, поиграем!\r\n\r\n#quraga #умнейдома #лучшедома`;
+export const SHARE_MESSAGE = `Заходи в QURAGU, поиграем!\r\n\r\n#quraga #умнейдома #лучшедома`;
 export const SHARE_IMAGE = {
   wall: {
     url: '/share/wall.svg',
@@ -24,3 +25,6 @@ export const SHARE_IMAGE = {
     }
   }
 };
+
+export const EMOTION_SIZE = 40;
+export const EMOTION_COUNT = 10;

@@ -35,13 +35,14 @@ export default function usePanels(initialActivePanel) {
 
   const back = useCallback(() => {
     setHistory(history => {
+      const nextHistory = history.slice(0, history.length - 1);
+
       if (history.length === 1) {
         followActivePanel(nextHistory[0], true);
 
         return history;
       }
 
-      const nextHistory = [...history].slice(0, history.length - 1);
       const nextPanel = nextHistory[nextHistory.length - 1];
       followActivePanel(nextPanel);
 

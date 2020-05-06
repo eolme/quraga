@@ -13,7 +13,9 @@ const Button = (props) => {
 Button.propTypes = {
   children: PropTypes.node,
   className: PropTypes.any,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  href: PropTypes.string,
+  target: PropTypes.string
 };
 
 export default Button;
