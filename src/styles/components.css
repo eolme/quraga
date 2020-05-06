@@ -712,6 +712,8 @@
   justify-content: space-between;
   align-content: center;
   align-items: center;
+
+  pointer-events: none;
 }
 
 .Root .GamePlayers,
@@ -758,10 +760,6 @@
   margin-left: 8px;
 }
 
-.GameOverlay {
-  pointer-events: none;
-}
-
 .QrScanner {
   background-color: rgba(255, 255, 255, .1);
   border: none;
@@ -783,6 +781,8 @@
 }
 
 .GameResult__avatar {
+  display: inline-block;
+
   width: 98px;
   height: 98px;
 
@@ -791,6 +791,15 @@
 
   box-shadow: 0 0 0 4px var(--app-primary);
   background-color: var(--app-primary);
+}
+
+.GameResult__fake {
+  position: absolute;
+  top: -2px;
+  left: calc(50% - 51px);
+  width: 102px;
+  height: 102px;
+  display: block;
 }
 
 .GameResult {
@@ -804,6 +813,10 @@
   align-content: stretch;
   align-items: stretch;
 
+  position: relative;
+}
+
+.GameResult__item {
   position: relative;
 }
 
@@ -882,6 +895,7 @@
   flex-shrink: 0;
   min-width: 0;
   max-width: 430px;
+  white-space: nowrap;
 }
 
 .Root .GameResult__button,
@@ -1006,4 +1020,37 @@
   width: 30px;
   height: 30px;
   margin-left: 12px;
+}
+
+.Emotions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Emotions__button {
+  background-color: transparent;
+  border-radius: 999em;
+  margin: 0 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 70px;
+  height: 70px;
+}
+
+.Emotions__image {
+  display: block;
+  max-height: 70px;
+  max-width: 70px;
+}
+
+.emotion-bg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
 }

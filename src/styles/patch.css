@@ -94,6 +94,10 @@ img {
   padding-top: 8px;
 }
 
+.ActionSheet--android .ActionSheetItem__before + .ActionSheetItem__container {
+  --text_primary: #3E3E3E;
+}
+
 .Gallery {
   height: 100%;
   flex-grow: 1;
@@ -112,4 +116,8 @@ img {
 .View__popout:empty,
 .View__modal:empty {
   display: none;
+}
+
+.Spinner {
+  margin: auto;
 }

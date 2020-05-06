@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import App from './App';
 import Offline from '../components/Offline';
 
+import CommonError from '../components/CommonError';
+import GameError from '../components/GameError';
+
 import useGlobal from '../hooks/use-global';
 import { interpretResponse } from '../utils/data';
 
@@ -26,6 +29,41 @@ const Base = () => {
 
     global.socket.on('connect', handleOnlineStatus);
     global.socket.on('disconnect', handleOnlineStatus);
+
+    const handleError = (error = window.event, source, lineno, colno, raw) => {
+      global.bus.once('modal:closed', () => {
+        if (raw) {
+          error = raw;
+        }
+
+        if (error instanceof Event) {
+          error = error.reason;
+        }
+
+        if (error && 'code' in error) {
+          global.store.modal.content = (
+            <GameError code={error.code} />
+          );
+        } else {
+          global.store.modal.content = (
+            <CommonError />
+          );
+        }
+
+        global.bus.once('modal:updated', () => {
+          global.bus.emit('modal:open');
+        });
+        global.bus.emit('modal:update');
+      });
+      global.bus.emit('modal:close');
+
+      return true;
+    };
+
+    window.addEventListener('error', handleError);
+    window.addEventListener('abort', handleError);
+    window.addEventListener('unhandledrejection', handleError);
+    global.socket.on('error', handleError);
   }, []);
 
   useEffect(() => {
@@ -97,6 +135,8 @@ const Base = () => {
           status_bar_style: 'light',
           action_bar_color: '#355FDE',
           navigation_bar_color: '#537EF9'
+        }).catch(() => {
+          // See: https://github.com/VKCOM/vk-bridge/issues/103
         });
       }
     };
@@ -109,6 +149,7 @@ const Base = () => {
       switch (event.detail.type) {
         case 'VKWebAppInitResult':
         case 'VKWebAppViewRestore':
+        case 'VKWebAppLocationChanged':
           updateView();
           break;
       }
@@ -122,8 +163,6 @@ const Base = () => {
     ]).then(() => {
       global.socket.open();
       updateLoadState(true);
-    }).catch((e) => {
-      console.log(e);
     });
   }, []);
 

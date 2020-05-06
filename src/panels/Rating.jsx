@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Panel, Div, Tabs, TabsItem, Gallery } from '@vkontakte/vkui';
 
@@ -13,11 +13,6 @@ const Rating = ({ id, callback }) => {
   const global = useGlobal();
   const [tab, setTab] = useState(0);
 
-  useEffect(() => {
-    global.store.modal = (<RatingRules />);
-    global.bus.emit('modal:update');
-  }, []);
-
   const tabOnClick = useCallback((index) => {
     window.requestAnimationFrame(() => {
       setTab(index);
@@ -25,7 +20,12 @@ const Rating = ({ id, callback }) => {
   }, []);
 
   const showModal = useCallback(() => {
-    global.bus.emit('modal:show');
+    global.bus.once('modal:updated', () => {
+      global.bus.emit('modal:open');
+    });
+
+    global.store.modal.content = (<RatingRules />);
+    global.bus.emit('modal:update');
   }, []);
 
   return (
