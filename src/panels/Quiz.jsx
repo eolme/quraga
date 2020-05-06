@@ -66,6 +66,18 @@ const Quiz = ({id}) => {
     setRenderAnswered(state);
   }, [setRenderAnswered]);
 
+  useEffect(() => {
+    const block = () => {
+      setState(true);
+    };
+
+    global.bus.on('game:time', block);
+
+    return () => {
+      global.bus.detach('game:time', block);
+    };
+  }, [setState]);
+
   const exit = useCallback(() => {
     global.store.mode = null;
     global.store.game = {};
@@ -146,7 +158,7 @@ const Quiz = ({id}) => {
   }, [points]);
 
   useEffect(() => {
-    if (answer) {
+    if (answer && answer.points) {
       const creator = parseInt(answer.points.creator, 10);
       const opponent = parseInt(answer.points.opponent, 10);
 
@@ -173,14 +185,20 @@ const Quiz = ({id}) => {
         if (renderAnswered || immediateAnswered) {
           return;
         }
+
         setState(true);
-
-        global.effects.vibrate.touch();
-
+        setAnswer({
+          game_answers: [{
+            user: global.store.game[global.store.game.is],
+            answer_id: id
+          }]
+        });
         global.socket.emit('answer', {
           game_id: global.store.game.id,
           answer_id: id
         });
+
+        global.effects.vibrate.touch();
       };
 
       return question.answers.map((item) => {
@@ -192,9 +210,11 @@ const Quiz = ({id}) => {
             className={cn({
               'Button--green':
                 answer &&
+                answer.correct_answer_id &&
                 answer.correct_answer_id === item.id,
               'Button--red':
                 answer &&
+                answer.correct_answer_id &&
                 answer.correct_answer_id !== item.id &&
                 answer.game_answers.find((model) => {
                   return model.user.id === global.store.game[global.store.game.is].id &&
@@ -572,7 +592,13 @@ const Quiz = ({id}) => {
     global.socket.on('new-question', (ask) => {
       ++global.store.game.current;
 
-      ask.ttw = Date.now() + ask.ttw * 1000 - 300;
+      const wait = (ask.ttw - 1) * 1000 - 300;
+      ask.ttw = Date.now() + wait;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        global.bus.emit('game:time');
+      }, wait);
+
       ask.order = global.store.game.current;
       ask.answers = shuffle(ask.answers);
 
