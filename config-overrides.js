@@ -8,6 +8,7 @@ const {
 } = require('customize-cra');
 
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const ScriptWebpackPlugin = require('html-webpack-scripts-plugin');
 const CombineMediaQuery = require('postcss-combine-media-query');
 
 module.exports = process.env.NODE_ENV === 'production' ?
@@ -42,6 +43,9 @@ module.exports = process.env.NODE_ENV === 'production' ?
         /\.map/,
         /\.txt/
       ]
+    })),
+    addWebpackPlugin(new ScriptWebpackPlugin({
+      'defer=defer charset=utf-8': /.*/
     }))
   ) : override(
     disableEsLint(),

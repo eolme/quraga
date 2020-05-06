@@ -82,6 +82,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
     "html-webpack-plugin": "^4.3.0",
+    "html-webpack-scripts-plugin": "^1.0.3",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.2",
     "postcss-combine-media-query": "^1.0.1",
