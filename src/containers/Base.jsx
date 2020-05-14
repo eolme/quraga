@@ -150,8 +150,6 @@ const Base = () => {
         case 'VKWebAppInitResult':
         case 'VKWebAppViewRestore':
         case 'VKWebAppLocationChanged':
-        case 'VKWebAppOpenCodeReaderResult':
-        case 'VKWebAppOpenCodeReaderFailed':
           updateView();
           break;
       }
