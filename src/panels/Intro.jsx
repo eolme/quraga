@@ -34,7 +34,7 @@ const Intro = ({ id, callback }) => {
             </div>
             <h1 className="PanelTitle">Привет, друг!</h1>
             <div className="IntroContent">
-              Это QURAGA - интеллектуальная
+              Это QURAGA — интеллектуальная
               игра, в которой можно бросить
               вызов своим друзьям и
               посоревноваться за место
