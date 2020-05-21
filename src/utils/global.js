@@ -9,6 +9,8 @@ import context from '../utils/context';
 import { parseQuery } from '../utils/uri';
 import { getUTCOffset } from '../utils/date';
 
+import {socketUrl, apiUrl} from '../config';
+
 const bus = new Bus();
 
 const VKParams = window.btoa(JSON.stringify({
@@ -16,7 +18,7 @@ const VKParams = window.btoa(JSON.stringify({
   utc_offset: getUTCOffset()
 }));
 
-const socket = io('wss://vk-battle.ezavalishin.ru', {
+const socket = io(socketUrl, {
   autoConnect: false,
   transports: ['websocket'],
   query: {
@@ -25,7 +27,7 @@ const socket = io('wss://vk-battle.ezavalishin.ru', {
 });
 
 const axiosInstance = axios.create({
-  baseURL: 'https://vk-battle.ezavalishin.ru',
+  baseURL: apiUrl,
   headers: {
     'Vk-Params': VKParams,
     'Accept': 'application/json'
