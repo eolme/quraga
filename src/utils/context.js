@@ -31,18 +31,6 @@ if (!('window' in context)) {
   context.window = windowFallback;
 }
 
-if (!('history' in context.window)) {
-  context.window.history = {};
-}
-
-if (!('pushState' in context.window.history)) {
-  context.window.history.pushState = () => { };
-}
-
-if (!('back' in context.window.history)) {
-  context.window.history.back = () => { };
-}
-
 raf.polyfill(context.window);
 
 if (!('document' in context)) {
