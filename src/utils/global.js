@@ -9,7 +9,7 @@ import context from '../utils/context';
 import { parseQuery } from '../utils/uri';
 import { getUTCOffset } from '../utils/date';
 
-import {socketUrl, apiUrl} from '../config';
+import { URL_SOCKET, URL_API } from '../utils/constants';
 
 const bus = new Bus();
 
@@ -18,7 +18,7 @@ const VKParams = window.btoa(JSON.stringify({
   utc_offset: getUTCOffset()
 }));
 
-const socket = io(socketUrl, {
+const socket = io(URL_SOCKET, {
   autoConnect: false,
   transports: ['websocket'],
   query: {
@@ -27,7 +27,7 @@ const socket = io(socketUrl, {
 });
 
 const axiosInstance = axios.create({
-  baseURL: apiUrl,
+  baseURL: URL_API,
   headers: {
     'Vk-Params': VKParams,
     'Accept': 'application/json'

@@ -1,9 +1,9 @@
-import {appId, appLink} from '../config';
+export const URL_SOCKET = process.env.REACT_APP_SOCKET_URL;
+export const URL_API = process.env.REACT_APP_API_URL;
 
-export const APP_LINK = appLink;
-export const APP_ID = appId;
+export const APP_LINK = process.env.REACT_APP_APP_LINK;
+export const APP_ID = process.env.REACT_APP_APP_ID;
 export const APP_SUPPORT = 'https://vk.me/petrov.engineer';
-
 
 export const SHARE_MESSAGE = `Заходи в QURAGU, поиграем!\r\n\r\n#quraga #умнейдома #лучшедома`;
 export const SHARE_IMAGE = {
@@ -31,3 +31,13 @@ export const SHARE_IMAGE = {
 
 export const EMOTION_SIZE = 40;
 export const EMOTION_COUNT = 10;
+
+export const VIEW_SETTINGS_BASE = {
+  status_bar_style: 'light',
+  action_bar_color: '#355FDE'
+};
+export const VIEW_SETTINGS_EXTENDED = {
+  status_bar_style: 'light',
+  action_bar_color: '#355FDE',
+  navigation_bar_color: '#537EF9'
+};
