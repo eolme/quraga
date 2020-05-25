@@ -2,6 +2,7 @@ import '@vkontakte/vkui/dist/vkui.css';
 import './styles/style.css';
 
 import './utils/context';
+import './utils/timers';
 import './utils/global';
 
 import React from 'react';
