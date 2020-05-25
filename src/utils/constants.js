@@ -1,6 +1,9 @@
-export const APP_LINK = 'https://vk.com/app7403549';
+import {appId, appLink} from '../config';
+
+export const APP_LINK = appLink;
+export const APP_ID = appId;
 export const APP_SUPPORT = 'https://vk.me/petrov.engineer';
-export const APP_ID = 7403549;
+
 
 export const SHARE_MESSAGE = `Заходи в QURAGU, поиграем!\r\n\r\n#quraga #умнейдома #лучшедома`;
 export const SHARE_IMAGE = {
