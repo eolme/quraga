@@ -8,6 +8,7 @@ import GameError from '../components/GameError';
 
 import useGlobal from '../hooks/use-global';
 import { interpretResponse } from '../utils/data';
+import { VIEW_SETTINGS_BASE, VIEW_SETTINGS_EXTENDED } from '../utils/constants';
 
 const Base = () => {
   const [loaded, updateLoadState] = useState(false);
@@ -131,11 +132,7 @@ const Base = () => {
 
     const updateView = () => {
       if (global.bridge.supports('VKWebAppSetViewSettings')) {
-        global.bridge.send('VKWebAppSetViewSettings', {
-          status_bar_style: 'light',
-          action_bar_color: '#355FDE',
-          navigation_bar_color: '#537EF9'
-        }).catch(() => {
+        global.bridge.send('VKWebAppSetViewSettings', VIEW_SETTINGS_BASE).catch(() => {
           // See: https://github.com/VKCOM/vk-bridge/issues/103
         });
       }
@@ -147,7 +144,6 @@ const Base = () => {
       }
 
       switch (event.detail.type) {
-        case 'VKWebAppInitResult':
         case 'VKWebAppViewRestore':
         case 'VKWebAppLocationChanged':
           updateView();
@@ -171,6 +167,15 @@ const Base = () => {
       setTimeout(() => {
         window.requestAnimationFrame(() => {
           // app seems ready
+
+          // Plaform bug: flash WebView
+          // Workaround: send before WebAppInit
+          if (global.bridge.supports('VKWebAppSetViewSettings')) {
+            global.bridge.send('VKWebAppSetViewSettings', VIEW_SETTINGS_EXTENDED).catch(() => {
+              // See: https://github.com/VKCOM/vk-bridge/issues/103
+            });
+          }
+
           global.bridge.send('VKWebAppInit');
         });
       }, 600);
