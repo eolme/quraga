@@ -109,6 +109,10 @@ img {
   padding-top: 8px;
 }
 
+.ModalPageHeader__shadow {
+  display: none;
+}
+
 .ActionSheet--android .ActionSheetItem__before + .ActionSheetItem__container {
   --text_primary: #3E3E3E;
 }
