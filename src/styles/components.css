@@ -1067,7 +1067,7 @@
 }
 
 .GameClose {
-  position: absolute;
+  position: fixed;
   top: var(--safe-area-inset-top, 20px);
   left: 0px;
 }
