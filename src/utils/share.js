@@ -106,7 +106,7 @@ const getStoryImage = (points) => {
     renderer.ctx.font = '700 75px/75px "Montserrat", "Avenir Black", "Verdana", "Century Gothic", "Arial Black", monospace';
     renderer.ctx.fillStyle = '#004BA1';
 
-    const text = `${points} ${declOfNum(points, ['очко', 'очка', 'очков'])}`;
+    const text = `${points} ${declOfNum(points, ['балл', 'балла', 'баллов'])}`;
     renderer.ctx.fillText(text, model.overlay.x, model.overlay.y);
 
     renderer.ctx.beginPath();
