@@ -4,8 +4,10 @@ const {
   addWebpackPlugin,
   addBabelPlugin,
   addPostcssPlugins,
-  watchAll
+  watchAll,
+  babelInclude
 } = require('customize-cra');
+const path = require('path');
 
 const PreloadWebpackPlugin = require('preload-webpack-plugin');
 const ScriptWebpackPlugin = require('html-webpack-scripts-plugin');
@@ -15,6 +17,11 @@ module.exports = process.env.NODE_ENV === 'production' ?
   override(
     disableEsLint(),
     addPostcssPlugins([CombineMediaQuery]),
+    babelInclude([
+      path.resolve('src'),
+      path.resolve('node_modules/worker-timers-broker'),
+      path.resolve('node_modules/worker-timers')
+    ]),
     addBabelPlugin('@babel/transform-react-constant-elements'),
     addBabelPlugin('@babel/transform-react-inline-elements'),
     addBabelPlugin('transform-react-remove-prop-types'),
@@ -49,6 +56,11 @@ module.exports = process.env.NODE_ENV === 'production' ?
     }))
   ) : override(
     disableEsLint(),
+    babelInclude([
+      path.resolve('src'),
+      path.resolve('node_modules/worker-timers-broker'),
+      path.resolve('node_modules/worker-timers')
+    ]),
     addBabelPlugin('@babel/transform-react-constant-elements'),
     addBabelPlugin('@babel/transform-react-inline-elements'),
     watchAll()
