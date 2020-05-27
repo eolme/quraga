@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { ActionSheet, ActionSheetItem, usePlatform, IOS } from '@vkontakte/vkui';
 import useGlobal from '../hooks/use-global';
+import useRouter from '../hooks/use-router';
 
 const PopoutConsumer = ({ by, onClose }) => {
   const global = useGlobal();
@@ -44,18 +45,34 @@ PopoutConsumer.propTypes = {
 
 const PopoutProvider = () => {
   const global = useGlobal();
+  const router = useRouter();
   const [updateCounter, setUpdateCounter] = useState(0);
   const [showed, setShowedState] = useState(false);
+
+  const closeByRouter = useCallback((name) => {
+    if (name === 'popout') {
+      window.requestAnimationFrame(() => {
+        setShowedState(false);
+      });
+    }
+  }, []);
+
 
   const show = useCallback(() => {
     window.requestAnimationFrame(() => {
       setShowedState(true);
+      global.bus.once('router:popstate', closeByRouter);
+      router.push('popout');
     });
   }, []);
 
   const close = useCallback(() => {
     window.requestAnimationFrame(() => {
       setShowedState(false);
+      global.bus.detach('router:popstate', closeByRouter);
+      if (router.state === 'popout') {
+        router.back();
+      }
     });
   }, []);
 
@@ -88,4 +105,4 @@ const PopoutProvider = () => {
   ) : null;
 };
 
-export default PopoutProvider;
+export default React.memo(PopoutProvider, () => true);

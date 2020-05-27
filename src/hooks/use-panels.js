@@ -1,7 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import { swipe } from '../utils/events';
+import useGlobal from '../hooks/use-global';
+import useRouter from '../hooks/use-router';
 
 export default function usePanels(initialActivePanel) {
+  const global = useGlobal();
+  const router = useRouter();
   const [activePanel, setActivePanel] = useState(initialActivePanel);
   const [history, setHistory] = useState([initialActivePanel]);
 
@@ -28,10 +32,10 @@ export default function usePanels(initialActivePanel) {
     followActivePanel(nextPanel);
 
     setHistory(history => [...history, nextPanel]);
-    window.history.pushState({ panel: nextPanel }, nextPanel);
+    router.push(nextPanel);
   }, [initialActivePanel]);
 
-  const goBack = useCallback(() => window.history.back(), []);
+  const goBack = useCallback(() => router.back(), []);
 
   const back = useCallback(() => {
     setHistory(history => {
@@ -51,11 +55,18 @@ export default function usePanels(initialActivePanel) {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('popstate', (e) => {
-      e.preventDefault();
+    const followState = (name) => {
+      if (name === 'modal' || name === 'popout') {
+        return;
+      }
       back();
-    });
-  }, [back]);
+    };
+
+    global.bus.on('router:popstate', followState);
+    return () => {
+      global.bus.detach('router:popstate', followState);
+    };
+  }, []);
 
   return {
     activePanel,

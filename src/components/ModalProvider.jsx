@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ModalRoot, ModalPage, ModalPageHeader, withModalRootContext } from '@vkontakte/vkui';
 import useGlobal from '../hooks/use-global';
+import useRouter from '../hooks/use-router';
 
 const ModalConsumer = withModalRootContext(({ by, updateModalHeight }) => {
   const global = useGlobal();
@@ -22,19 +23,34 @@ ModalConsumer.propTypes = {
 
 const ModalProvider = () => {
   const global = useGlobal();
+  const router = useRouter();
   const [updateCounter, setUpdateCounter] = useState(0);
   const [activeModal, setActiveModal] = useState(null);
   const mountedRef = useRef();
 
+  const closeByRouter = useCallback((name) => {
+    if (name === 'modal') {
+      window.requestAnimationFrame(() => {
+        setActiveModal(null);
+      });
+    }
+  }, []);
+
   const open = useCallback(() => {
     window.requestAnimationFrame(() => {
       setActiveModal('modal');
+      global.bus.once('router:popstate', closeByRouter);
+      router.push('modal');
     });
   }, []);
 
   const close = useCallback(() => {
     window.requestAnimationFrame(() => {
       setActiveModal(null);
+      global.bus.detach('router:popstate', closeByRouter);
+      if (router.state === 'modal') {
+        router.back();
+      }
     });
   }, []);
 
@@ -99,4 +115,4 @@ const ModalProvider = () => {
   );
 };
 
-export default ModalProvider;
+export default React.memo(ModalProvider, () => true);
