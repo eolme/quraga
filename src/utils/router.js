@@ -1,3 +1,4 @@
+import context from '../utils/context';
 import global from '../utils/global';
 
 const router = {
@@ -20,5 +21,9 @@ window.addEventListener('popstate', (e) => {
   router.state = e.state;
   global.bus.emit('router:popstate', null, last);
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  context.$router = router;
+}
 
 export default router;
