@@ -109,6 +109,12 @@ img {
   padding-top: 26px;
 }
 
+.ModalPage__in-wrap {
+  z-index: 1;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
 .ModalPage__header {
   pointer-events: none;
 }
