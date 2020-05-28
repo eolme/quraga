@@ -106,11 +106,30 @@ img {
 }
 
 .ModalPage .ModalPage__in {
-  padding-top: 8px;
+  padding-top: 26px;
+}
+
+.ModalPage__header {
+  pointer-events: none;
 }
 
 .ModalPageHeader__shadow {
   display: none;
+}
+
+.ModalPageHeader__content {
+  left: calc(50% - 18px);
+  width: 36px;
+  top: 6px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: var(--text_secondary);
+}
+
+.ModalPageHeader__content,
+.ModalPageHeader--ios .ModalPageHeader__content,
+.ModalPageHeader--android .ModalPageHeader__content {
+  position: absolute;
 }
 
 .ActionSheet--android .ActionSheetItem__before + .ActionSheetItem__container {
