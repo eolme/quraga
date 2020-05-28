@@ -714,7 +714,9 @@
 }
 
 .StageTitle .Timer {
-  width: 54px;
+  flex-shrink: 0;
+  min-width: 54px;
+  white-space: nowrap;
   font-size: 36px;
   font-weight: 800;
   line-height: 44px;
