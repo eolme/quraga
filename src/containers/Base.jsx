@@ -65,6 +65,7 @@ const Base = () => {
     window.addEventListener('abort', handleError);
     window.addEventListener('unhandledrejection', handleError);
     global.socket.on('error', handleError);
+    global.socket.on('exception', handleError);
   }, []);
 
   useEffect(() => {
