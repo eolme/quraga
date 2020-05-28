@@ -18,7 +18,7 @@ export default function usePanels(initialActivePanel) {
           swipe.enable();
         }
 
-        return nextActivePanel;
+        return nextActivePanel || initialActivePanel;
       });
     });
   }, [setActivePanel]);
