@@ -280,7 +280,7 @@ const Quiz = ({id}) => {
         case 'preview':
           setView(
             <div className="Stage">
-              <div className="GameResult__title">Битва умов начнется через</div>
+              <div className="GameResult__title">Игра начнется через</div>
               <Countdown
                 key={global.store.game.id}
                 renderer={Clock}
