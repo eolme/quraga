@@ -36,4 +36,12 @@ bridge.send = bridge.sendPromise = (name, params) => {
   });
 };
 
+const supports = bridge.supports.bind(bridge);
+bridge.supports = (method) => {
+  if (!bridge.isWebView() && (window.parent === window)) {
+    return false;
+  }
+  return supports(method);
+};
+
 export default bridge;
