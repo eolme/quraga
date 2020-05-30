@@ -7,13 +7,16 @@ import CommonError from '../components/CommonError';
 import GameError from '../components/GameError';
 
 import useGlobal from '../hooks/use-global';
+import useRouter from '../hooks/use-router';
+
 import { interpretResponse } from '../utils/data';
 import { VIEW_SETTINGS_BASE, VIEW_SETTINGS_EXTENDED } from '../utils/constants';
 
 const Base = () => {
+  const global = useGlobal();
+  const router = useRouter();
   const [loaded, updateLoadState] = useState(false);
   const [showOffline, setShowOffline] = useState(false);
-  const global = useGlobal();
 
   useEffect(() => {
     const handleOnlineStatus = () => {
@@ -32,7 +35,7 @@ const Base = () => {
     global.socket.on('disconnect', handleOnlineStatus);
 
     const handleError = (error = window.event, source, lineno, colno, raw) => {
-      global.bus.once('modal:closed', () => {
+      const show = () => {
         if (raw) {
           error = raw;
         }
@@ -55,10 +58,27 @@ const Base = () => {
           global.bus.emit('modal:open');
         });
         global.bus.emit('modal:update');
-      });
-      global.bus.emit('modal:close');
+      };
 
-      return true;
+      switch (router.state) {
+        case 'modal':
+          global.bus.once('modal:closed', show);
+          global.bus.emit('modal:close');
+          return;
+        case 'popout':
+          global.bus.emit('popout:close');
+          show();
+          return;
+        default:
+          window.requestAnimationFrame(() => {
+            setTimeout(() => {
+              window.requestAnimationFrame(() => {
+                show();
+              });
+            }, 1200);
+          });
+          return;
+      }
     };
 
     window.addEventListener('error', handleError);
