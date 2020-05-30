@@ -522,7 +522,9 @@ const Quiz = ({id}) => {
           if (global.store.mode === 'multi') {
             window.requestAnimationFrame(() => {
               setTimeout(() => {
-                global.bus.emit('modal:open');
+                window.requestAnimationFrame(() => {
+                  global.bus.emit('modal:open');
+                });
               }, 600);
             });
           } else {
@@ -545,7 +547,11 @@ const Quiz = ({id}) => {
         global.bus.emit('modal:update');
       }
 
-      setType('prepare');
+      if (global.store.mode !== 'single') {
+        setType('prepare');
+      } else {
+        setType('loading');
+      }
     });
 
     global.socket.on('game-ready', () => {
