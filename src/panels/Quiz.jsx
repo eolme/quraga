@@ -860,10 +860,11 @@ const Quiz = ({id}) => {
 
   const memoType = useMemo(() => {
     if (type === 'question') {
-      return `${type}-${question.order}`;
-    } else {
-      return type;
+      if (question) {
+        return `${type}-${question.order}`;
+      }
     }
+    return type;
   }, [type, question]);
 
   return (
