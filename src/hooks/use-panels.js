@@ -18,7 +18,7 @@ export default function usePanels(initialActivePanel) {
           swipe.enable();
         }
 
-        return nextActivePanel;
+        return nextActivePanel ?? initialActivePanel;
       });
     });
   }, [setActivePanel]);
@@ -56,7 +56,7 @@ export default function usePanels(initialActivePanel) {
 
   useEffect(() => {
     const followState = (name) => {
-      if (name === 'modal' || name === 'popout') {
+      if (name === 'modal' || name === 'popout' || name === null) {
         return;
       }
       back();
