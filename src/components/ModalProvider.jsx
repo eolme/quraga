@@ -39,16 +39,20 @@ const ModalProvider = () => {
   const open = useCallback(() => {
     window.requestAnimationFrame(() => {
       setActiveModal('modal');
-      global.bus.once('router:popstate', closeByRouter);
-      router.push('modal');
+
+      if (router.state !== 'modal') {
+        global.bus.once('router:popstate', closeByRouter);
+        router.push('modal');
+      }
     });
   }, []);
 
   const close = useCallback(() => {
     window.requestAnimationFrame(() => {
       setActiveModal(null);
-      global.bus.detach('router:popstate', closeByRouter);
+
       if (router.state === 'modal') {
+        global.bus.detach('router:popstate', closeByRouter);
         router.back();
       }
     });

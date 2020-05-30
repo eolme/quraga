@@ -61,16 +61,20 @@ const PopoutProvider = () => {
   const show = useCallback(() => {
     window.requestAnimationFrame(() => {
       setShowedState(true);
-      global.bus.once('router:popstate', closeByRouter);
-      router.push('popout');
+
+      if (router.state !== 'popout') {
+        global.bus.once('router:popstate', closeByRouter);
+        router.push('popout');
+      }
     });
   }, []);
 
   const close = useCallback(() => {
     window.requestAnimationFrame(() => {
       setShowedState(false);
-      global.bus.detach('router:popstate', closeByRouter);
+
       if (router.state === 'popout') {
+        global.bus.detach('router:popstate', closeByRouter);
         router.back();
       }
     });
