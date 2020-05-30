@@ -19,7 +19,9 @@ const router = {
 window.addEventListener('popstate', (e) => {
   const last = router.state;
   router.state = e.state;
-  global.bus.emit('router:popstate', null, last);
+  setTimeout(() => {
+    global.bus.emit('router:popstate', null, last);
+  }, 0);
 });
 
 if (process.env.NODE_ENV !== 'production') {
