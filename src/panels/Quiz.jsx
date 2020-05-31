@@ -509,7 +509,7 @@ const Quiz = ({id}) => {
       };
 
       if (global.store.mode === 'multi' || global.store.mode === 'recreate') {
-        const link = `${APP_LINK}#join-${global.store.game.id}`;
+        const link = `${APP_LINK}#join-${global.store.game.uuid}`;
         const __html = qr.createQR(link, {
           qrSize: 272,
           isShowLogo: true,
