@@ -30,6 +30,7 @@
   "scripts": {
     "build": "react-app-rewired build",
     "start": "react-app-rewired start",
+    "predeploy": "yarn build",
     "deploy": "vk-miniapps-deploy",
     "prod": "yarn build && yarn deploy",
     "lint": "eslint --fix --ext .js,.jsx --ignore-path .gitignore .",
