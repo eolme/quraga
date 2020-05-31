@@ -457,48 +457,46 @@ const Quiz = ({id}) => {
     let timeout = null;
 
     global.socket.on('game-invite', (game) => {
-      if (global.store.mode !== 'recreate') {
-        if (game.creator.id === global.store.game[global.store.game.vs].id) {
-          const deny = () => {
-            global.bus.emit('modal:close');
-          };
+      if (game.creator.id === global.store.game[global.store.game.vs].id) {
+        const deny = () => {
+          global.bus.emit('modal:close');
+        };
 
-          const accept = () => {
-            global.socket.emit('connect-to-online-game', game);
-          };
+        const accept = () => {
+          global.socket.emit('connect-to-online-game', game);
+        };
 
-          global.bus.once('modal:updated', () => {
-            global.bus.emit('modal:open');
-          });
+        global.bus.once('modal:updated', () => {
+          global.bus.emit('modal:open');
+        });
 
-          global.store.modal.content = (
-            <Div className="Recreate">
-              <div className="RecreateMessage">
+        global.store.modal.content = (
+          <Div className="Recreate">
+            <div className="RecreateMessage">
+              <img
+                src={global.store.game[global.store.game.vs].avatar}
+                alt={global.store.game[global.store.game.vs].id}
+                className="RecreateMessage__avatar"
+              />
+              <div className="RecreateMessage__content">
+                <span>Йо, {
+                  points[global.store.game.is] < points[global.store.game.vs] ?
+                    'может реванш' : 'ещё одну'
+                }?</span>
                 <img
-                  src={global.store.game[global.store.game.vs].avatar}
-                  alt={global.store.game[global.store.game.vs].id}
-                  className="RecreateMessage__avatar"
+                  src={require(/* webpackPreload: true */ '../assets/vs.png')}
+                  alt=""
+                  className="RecreateMessage__icon"
                 />
-                <div className="RecreateMessage__content">
-                  <span>Йо, {
-                    points[global.store.game.is] < points[global.store.game.vs] ?
-                      'может реванш' : 'ещё одну'
-                  }?</span>
-                  <img
-                    src={require(/* webpackPreload: true */ '../assets/vs.png')}
-                    alt=""
-                    className="RecreateMessage__icon"
-                  />
-                </div>
               </div>
-              <div className="GameResult__content">
-                <Button onClick={deny} className="GameResult__button">Отклонить</Button>
-                <Button onClick={accept} className="GameResult__button Button--blue">Принять</Button>
-              </div>
-            </Div>
-          );
-          global.bus.emit('modal:update');
-        }
+            </div>
+            <div className="GameResult__content">
+              <Button onClick={deny} className="GameResult__button">Отклонить</Button>
+              <Button onClick={accept} className="GameResult__button Button--blue">Принять</Button>
+            </div>
+          </Div>
+        );
+        global.bus.emit('modal:update');
       }
     });
 
