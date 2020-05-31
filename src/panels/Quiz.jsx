@@ -605,7 +605,7 @@ const Quiz = ({id}) => {
         global.bus.emit('game:time');
       }, wait);
 
-      ask.order = global.store.game.current;
+      ask.order = ask.order ?? global.store.game.current;
       ask.answers = shuffle(ask.answers);
 
       setState(false);
