@@ -41,11 +41,12 @@ const GameError = ({ code }) => {
     });
   };
 
-  if (code === 1 || code === 2 || code === 3 || code === 5) {
+  if (code === 1 || code === 2 || code === 3 || code === 5 || code === 8) {
     let message = null;
 
     switch (code) {
       case 1:
+      case 8:
         message = 'Похоже игра уже началась...';
         break;
       case 2:
