@@ -32,7 +32,7 @@
   background-color: #fff;
 }
 
-.ModalPage__in.Offline__group {
+.ModalPage .ModalPage__in.Offline__group {
   height: auto;
   max-height: 100%;
   padding-top: 8px;

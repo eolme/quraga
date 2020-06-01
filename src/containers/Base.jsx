@@ -31,6 +31,19 @@ const Base = () => {
     window.addEventListener('online', handleOnlineStatus);
     window.addEventListener('offline', handleOnlineStatus);
 
+    global.bridge.subscribe((event) => {
+      if (!event || !event.detail) {
+        return;
+      }
+
+      switch (event.detail.type) {
+        case 'VKWebAppViewRestore':
+        case 'VKWebAppLocationChanged':
+          handleOnlineStatus();
+          break;
+      }
+    });
+
     global.socket.on('connect', handleOnlineStatus);
     global.socket.on('disconnect', handleOnlineStatus);
 
