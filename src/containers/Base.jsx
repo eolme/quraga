@@ -44,6 +44,11 @@ const Base = () => {
           error = error.reason;
         }
 
+        if (error?.error_data?.error_code === 9) {
+          // iOS bug: vk-bridge background event
+          return;
+        }
+
         if (error && 'code' in error) {
           global.store.modal.content = (
             <GameError code={error.code} />
