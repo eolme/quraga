@@ -4,6 +4,7 @@ import App from './App';
 import Offline from '../components/Offline';
 
 import CommonError from '../components/CommonError';
+import JoinError from '../components/JoinError';
 import GameError from '../components/GameError';
 
 import useGlobal from '../hooks/use-global';
@@ -48,13 +49,14 @@ const Base = () => {
     global.socket.on('disconnect', handleOnlineStatus);
 
     const handleError = (error = window.event, source, lineno, colno, raw) => {
+      console.log(error);
       const show = () => {
         if (raw) {
           error = raw;
         }
 
         if (error instanceof Event) {
-          error = error.reason;
+          error = error.error ?? error.reason;
         }
 
         if (error?.error_data?.error_code === 9) {
@@ -62,7 +64,11 @@ const Base = () => {
           return;
         }
 
-        if (error && 'code' in error) {
+        if (error === 'join:error') {
+          global.store.modal.content = (
+            <JoinError />
+          );
+        } else if (error && typeof error.code === 'number') {
           global.store.modal.content = (
             <GameError code={error.code} />
           );
@@ -104,6 +110,7 @@ const Base = () => {
     window.addEventListener('unhandledrejection', handleError);
     global.socket.on('error', handleError);
     global.socket.on('exception', handleError);
+    global.bus.on('join:error', handleError);
   }, []);
 
   useEffect(() => {

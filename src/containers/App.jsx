@@ -28,7 +28,7 @@ const App = () => {
       global.bus.emit('game:start');
     };
 
-    const checkJoinOrFetch = (location) => {
+    const checkJoinOrFetch = (location, shouldShowError) => {
       // uuid v4
       const hash = /join-([0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/.exec(location);
       if (hash && hash[1]) {
@@ -48,6 +48,11 @@ const App = () => {
           global.bus.once('app:auth', join);
         }
       } else {
+        if (shouldShowError) {
+          global.bus.once('app:auth', () => {
+            global.bus.emit('join:error', null, 'join:error');
+          });
+        }
         global.bus.emit('app:update');
       }
     };
@@ -59,13 +64,13 @@ const App = () => {
 
       switch (event.detail.type) {
         case 'VKWebAppLocationChanged':
-          checkJoinOrFetch(event.detail.data.location);
+          checkJoinOrFetch(event.detail.data.location, false);
           break;
         case 'VKWebAppViewRestore':
-          checkJoinOrFetch(window.location.hash);
+          checkJoinOrFetch(window.location.hash, false);
           break;
         case 'VKWebAppOpenCodeReaderResult':
-          checkJoinOrFetch(event.detail.data.code_data);
+          checkJoinOrFetch(event.detail.data.code_data, true);
           break;
       }
     });
