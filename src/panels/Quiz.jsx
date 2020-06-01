@@ -637,13 +637,13 @@ const Quiz = ({id}) => {
         global.socket.emit('create-online-game');
         break;
       case 'join': {
-        const game_id = +global.store.join;
-        if (game_id === -1) {
+        if (+global.store.join === -1) {
           global.bus.emit('game:end');
           return;
         }
+        const game_uuid = global.store.join;
         global.store.join = -1;
-        global.socket.emit('connect-to-online-game', { game_id });
+        global.socket.emit('connect-to-online-game', { game_uuid });
         break;
       }
       default:
