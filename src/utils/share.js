@@ -63,31 +63,37 @@ const getTemplateRender = (width, height) => {
 const getWallImage = () => {
   return new Promise((resolve) => {
     const model = SHARE_IMAGE.wall;
-    return Promise.all([
-      loadImage(model.url, model.width, model.height),
-      loadImage(global.store.user.avatar, model.size, model.size),
-      getTemplateRender(model.width, model.height)
-    ]).then(([background, avatar, renderer]) => {
-      renderer.ctx.drawImage(background, 0, 0);
-      renderer.ctx.beginPath();
-      const radius = model.size / 2;
-      renderer.ctx.arc(
-        model.x + radius,
-        model.y + radius,
-        radius,
-        0,
-        Math.PI * 2,
-        true
-      );
-      renderer.ctx.clip();
-      renderer.ctx.drawImage(
-        avatar,
-        model.x,
-        model.y,
-        model.size,
-        model.size
-      );
-      renderer.canvas.toBlob(resolve, 'image/png', 1);
+    global.bridge.send('VKWebAppGetUserInfo').then(({ sex }) => {
+      return sex === 1 ? 'female' : 'male';
+    }).catch(() => {
+      return 'male';
+    }).then((sex) => {
+      return Promise.all([
+        loadImage(model.url[sex], model.width, model.height),
+        loadImage(global.store.user.avatar, model.size, model.size),
+        getTemplateRender(model.width, model.height)
+      ]).then(([background, avatar, renderer]) => {
+        renderer.ctx.drawImage(background, 0, 0);
+        renderer.ctx.beginPath();
+        const radius = model.size / 2;
+        renderer.ctx.arc(
+          model.x + radius,
+          model.y + radius,
+          radius,
+          0,
+          Math.PI * 2,
+          true
+        );
+        renderer.ctx.clip();
+        renderer.ctx.drawImage(
+          avatar,
+          model.x,
+          model.y,
+          model.size,
+          model.size
+        );
+        renderer.canvas.toBlob(resolve, 'image/png', 1);
+      });
     });
   });
 };

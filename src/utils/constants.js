@@ -8,7 +8,10 @@ export const APP_SUPPORT = 'https://vk.me/petrov.engineer';
 export const SHARE_MESSAGE = `Заходи в QURAGU, поиграем!\r\n\r\n#quraga #умнейдома #лучшедома`;
 export const SHARE_IMAGE = {
   wall: {
-    url: '/share/wall.svg',
+    url: {
+      male: '/share/wall-male.svg',
+      female: '/share/wall-female.svg'
+    },
     width: 1200,
     height: 650,
     x: 925,
