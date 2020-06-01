@@ -35,6 +35,8 @@ const App = () => {
         if (global.bridge.supports('VKWebAppSetLocation')) {
           global.bridge.send('VKWebAppSetLocation', {
             location: ''
+          }).catch(() => {
+            window.location.hash = '';
           });
         } else {
           window.location.hash = '';
