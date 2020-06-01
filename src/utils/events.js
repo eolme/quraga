@@ -1,6 +1,8 @@
 import global from '../utils/global';
 
 export const SWIPE_EVENTS = ['dragstart', 'dragenter', 'gesturestart', 'gesturechange', 'MSGestureStart'];
+export const AUX_EVENTS = ['auxclick', 'contextmenu'];
+export const DEV_EVENTS = ['keydown'];
 
 export const PARAM_PASSIVE = { passive: true };
 export const PARAM_ACTIVE = { passive: false };
