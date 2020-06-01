@@ -39,6 +39,11 @@ img {
   background-color: var(--app-black);
 }
 
+.Tappable--android .Tappable__waves {
+  border-radius: inherit;
+  will-change: transform;
+}
+
 .Panel--flex .Panel__in {
   display: flex;
   flex-direction: column;
