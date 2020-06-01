@@ -42,7 +42,7 @@ const App = () => {
 
         global.store.join = hash[1];
 
-        if (global.store.user) {
+        if (global.store.user.id) {
           join();
         } else {
           global.bus.once('app:auth', join);

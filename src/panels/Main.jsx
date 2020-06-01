@@ -46,7 +46,7 @@ const Main = ({ id, callback }) => {
       return global.axios.get('/vk-user/my-games').then((response) => {
         const history = interpretResponse(response);
 
-        if (global.store.user) {
+        if (global.store.user.id) {
           global.store.user.history = history;
           global.bus.emit('app:history', global.store.user.history);
         } else {
@@ -65,7 +65,7 @@ const Main = ({ id, callback }) => {
     };
 
     const checkShowCallback = () => {
-      if (global.store.user) {
+      if (global.store.user.id) {
         updateStats({
           games_count: `${global.store.user.games_count}`.padStart(2, '0'),
           wins_count: `${global.store.user.wins_count}`.padStart(2, '0'),
