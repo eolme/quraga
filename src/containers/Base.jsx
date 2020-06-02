@@ -49,7 +49,6 @@ const Base = () => {
     global.socket.on('disconnect', handleOnlineStatus);
 
     const handleError = (error = window.event, source, lineno, colno, raw) => {
-      console.log(error);
       const show = () => {
         if (raw) {
           error = raw;
@@ -58,6 +57,8 @@ const Base = () => {
         if (error instanceof Event) {
           error = error.error ?? error.reason;
         }
+
+        console.error(error);
 
         if (error?.error_data?.error_code === 9) {
           // iOS bug: vk-bridge background event
