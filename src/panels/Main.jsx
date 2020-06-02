@@ -78,10 +78,12 @@ const Main = ({ id, callback }) => {
     checkShowCallback();
     fetchHistory();
 
+    let timer = setInterval(fetchHistory, 5E3); // 5s
     global.bus.on('app:update', fetchHistory);
     global.bus.on('app:auth', checkShowCallback);
     global.bus.on('app:history', checkHistory);
     return () => {
+      clearInterval(timer);
       global.bus.detach('app:update', fetchHistory);
       global.bus.detach('app:auth', checkShowCallback);
       global.bus.detach('app:history', checkHistory);
