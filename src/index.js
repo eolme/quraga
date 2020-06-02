@@ -1,3 +1,5 @@
+import 'react-app-polyfill/stable';
+
 import '@vkontakte/vkui/dist/vkui.css';
 import './styles/style.css';
 
