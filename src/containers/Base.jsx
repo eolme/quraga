@@ -109,7 +109,6 @@ const Base = () => {
     window.addEventListener('error', handleError);
     window.addEventListener('abort', handleError);
     window.addEventListener('unhandledrejection', handleError);
-    global.socket.on('error', handleError);
     global.socket.on('exception', handleError);
     global.bus.on('join:error', handleError);
   }, []);
