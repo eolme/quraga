@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { Group, Header, Cell } from '@vkontakte/vkui';
-// import Button from '../components/Button';
 
 import useGlobal from '../hooks/use-global';
 
@@ -11,7 +10,6 @@ const GameError = ({ code }) => {
   const prevent = useRef(false);
 
   let content = null;
-  // let action = null;
 
   useEffect(() => {
     const reset = () => {
@@ -27,19 +25,6 @@ const GameError = ({ code }) => {
       global.bus.detach('modal:closed', reset);
     };
   }, []);
-
-  // const startGame = () => {
-  //   window.requestAnimationFrame(() => {
-  //     global.bus.emit('game:end');
-  //     window.requestAnimationFrame(() => {
-  //       setTimeout(() => {
-  //         window.requestAnimationFrame(() => {
-  //           global.bus.emit('game:start');
-  //         });
-  //       }, 600);
-  //     });
-  //   });
-  // };
 
   if (code === 1 || code === 2 || code === 3 || code === 5 || code === 8) {
     let message = null;
@@ -59,42 +44,8 @@ const GameError = ({ code }) => {
     }
 
     content = `${message} Это вовсе не проблема! Просто создай новую игру или присоединись к другой.`;
-
-    // const createGame = () => {
-    //   prevent.current = true;
-    //   global.store.modal.state = true;
-    //   global.bus.once('modal:closed', () => {
-    //     if (!global.store.modal.state) {
-    //       return;
-    //     }
-    //     global.store.modal.state = false;
-    //     global.store.mode = 'multi';
-    //     global.store.game = {};
-    //     global.store.join = -1;
-    //     startGame();
-    //   });
-    //   global.bus.emit('modal:close');
-    // };
-    // action = (<Button onClick={createGame} className="Button--blue">Создать новую игру</Button>);
   } else if (code === 7) {
     content = 'Тебе одиноко? Это вовсе не проблема! Ты всегда можешь начать одиночную игру.';
-
-    // const createGame = () => {
-    //   prevent.current = true;
-    //   global.store.modal.state = true;
-    //   global.bus.once('modal:closed', () => {
-    //     if (!global.store.modal.state) {
-    //       return;
-    //     }
-    //     global.store.modal.state = false;
-    //     global.store.mode = 'single';
-    //     global.store.game = {};
-    //     global.store.join = -1;
-    //     startGame();
-    //   });
-    //   global.bus.emit('modal:close');
-    // };
-    // action = (<Button onClick={createGame} className="Button--blue">Начать одиночную игру</Button>);
   } else if (code === 4 || code === 6) {
     content = 'Пользователь еще не зашел в игру';
   }
@@ -104,13 +55,6 @@ const GameError = ({ code }) => {
       <Cell multiline={true}>
         {content}
       </Cell>
-      {/*{*/}
-      {/*  action ? (*/}
-      {/*    <Cell>*/}
-      {/*      {action}*/}
-      {/*    </Cell>*/}
-      {/*  ) : null*/}
-      {/*}*/}
     </Group>
   );
 };
