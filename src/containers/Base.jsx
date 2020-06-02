@@ -60,8 +60,8 @@ const Base = () => {
 
         console.error(error);
 
-        if (error?.error_data?.error_code === 9) {
-          // iOS bug: vk-bridge background event
+        if (error?.error_type === 'client_error') {
+          // awful vk-bridge error
           return;
         }
 
