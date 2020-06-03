@@ -37,4 +37,16 @@ if (!('document' in context)) {
   context.document = documentFallback;
 }
 
+if (!('console' in context)) {
+  context.console = {};
+}
+
+if (typeof context.console.log !== 'function') {
+  context.console.log = () => { };
+}
+
+if (typeof context.console.error !== 'function') {
+  context.console.error = () => { };
+}
+
 export default context;
