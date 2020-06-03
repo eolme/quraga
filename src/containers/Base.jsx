@@ -10,6 +10,7 @@ import GameError from '../components/GameError';
 import useGlobal from '../hooks/use-global';
 import useRouter from '../hooks/use-router';
 
+import sendError from '../utils/error';
 import { interpretResponse } from '../utils/data';
 import { VIEW_SETTINGS_BASE, VIEW_SETTINGS_EXTENDED } from '../utils/constants';
 
@@ -48,62 +49,66 @@ const Base = () => {
     global.socket.on('connect', handleOnlineStatus);
     global.socket.on('disconnect', handleOnlineStatus);
 
-    const handleError = (error = window.event, source, lineno, colno, raw) => {
-      const show = () => {
-        if (raw) {
-          error = raw;
-        }
+    const handleError = (error, source, lineno, colno, raw) => {
+      const send = () => {
+        return sendError(error, raw, source).then((send) => {
+          switch (send.type) {
+            case 'bridge':
+              return;
+            case 'join':
+              global.store.modal.content = (
+                <JoinError />
+              );
+              break;
+            case 'game':
+              global.store.modal.content = (
+                <GameError code={send.payload} />
+              );
+              break;
+            default:
+              global.store.modal.content = (
+                <CommonError />
+              );
+              break;
+          }
+        }).catch((e) => {
+          console.error(e);
+        });
+      };
 
-        if (error instanceof Event) {
-          error = error.error ?? error.reason;
-        }
+      const prepare = () => {
+        return new Promise((resolve) => {
+          switch (router.state) {
+            case 'modal':
+              global.bus.once('modal:closed', resolve);
+              global.bus.emit('modal:close');
+              return;
+            case 'popout':
+              global.bus.emit('popout:close');
+              resolve();
+              return;
+            default:
+              window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                  window.requestAnimationFrame(() => {
+                    resolve();
+                  });
+                }, 1200);
+              });
+              return;
+          }
+        });
+      };
 
-        console.error(error);
-
-        if (error?.error_type === 'client_error') {
-          // awful vk-bridge error
-          return;
-        }
-
-        if (error === 'join:error') {
-          global.store.modal.content = (
-            <JoinError />
-          );
-        } else if (error && typeof error.code === 'number') {
-          global.store.modal.content = (
-            <GameError code={error.code} />
-          );
-        } else {
-          global.store.modal.content = (
-            <CommonError />
-          );
-        }
-
+      Promise.all([
+        send(),
+        prepare()
+      ]).then(() => {
         global.bus.once('modal:updated', () => {
           global.bus.emit('modal:open');
         });
         global.bus.emit('modal:update');
-      };
-
-      switch (router.state) {
-        case 'modal':
-          global.bus.once('modal:closed', show);
-          global.bus.emit('modal:close');
-          return;
-        case 'popout':
-          global.bus.emit('popout:close');
-          show();
-          return;
-        default:
-          window.requestAnimationFrame(() => {
-            setTimeout(() => {
-              window.requestAnimationFrame(() => {
-                show();
-              });
-            }, 1200);
-          });
-          return;
-      }
+      });
     };
 
     window.addEventListener('error', handleError);
