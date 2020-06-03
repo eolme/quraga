@@ -101,7 +101,7 @@ const Main = ({ id, callback }) => {
                 #умнейдома
                 <QrScanner className="PanelTitle--after" />
               </h1>
-              <div className="RatingInline" data-to="rating" onClick={callback}>
+              <div className="RatingInline" onClick={callback.bind(null, 'rating')}>
                 <div className="RatingInline-in">
                   <div className="RatingInline__item">
                     <div className="RatingInline__item-caption">Игр</div>
@@ -148,7 +148,7 @@ const Main = ({ id, callback }) => {
                   history && history.length ? (
                     <History />
                   ) : (
-                    <Social />
+                    <Social callback={callback} />
                   )
                 )
               }

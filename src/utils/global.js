@@ -44,7 +44,8 @@ const global = {
     modal: { state: false, content: null },
     popout: { state: false, content: null },
     mode: null,
-    join: -1
+    join: -1,
+    tab: 0
   },
   storage,
   axios: axiosInstance,

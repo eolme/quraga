@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
-import { usePlatform, ANDROID } from '@vkontakte/vkui';
+import { Tappable, usePlatform, ANDROID } from '@vkontakte/vkui';
 
-const Social = () => {
+const Social = ({ callback }) => {
   const [friends, updateFriends] = useState(null);
   const global = useGlobal();
   const platform = usePlatform();
@@ -42,11 +43,16 @@ const Social = () => {
     }
   }, [friends]);
 
+  const open = useCallback(() => {
+    global.store.tab = 1;
+    callback('rating');
+  }, [callback]);
+
   return (
     <CSSTransition in={Boolean(friends)} appear={true} classNames="fade" timeout={platform === ANDROID ? 300 : 600}>
       {
         friends && friends.length ? (
-          <div className="Social">
+          <Tappable className="Social" onClick={open}>
             <div className="Social-in">
               <div className="Social__caption">
                 Твои друзья уже тут!
@@ -55,13 +61,17 @@ const Social = () => {
                 {avatars}
               </div>
             </div>
-          </div>
+          </Tappable>
         ) : (
-          <div className="Fact" />
+          <div className="Social" />
         )
       }
     </CSSTransition>
   );
+};
+
+Social.propTypes = {
+  callback: PropTypes.func.isRequired
 };
 
 export default Social;

@@ -422,13 +422,14 @@
   color: var(--button_primary_foreground);
 }
 
+.Social {
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
+}
+
 .Social-in {
   height: 70px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
-
-  box-sizing: border-box;
 
   background-color: var(--button_primary_background);
   color: var(--button_primary_foreground);
@@ -441,6 +442,7 @@
   align-items: stretch;
 
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .Social__caption {

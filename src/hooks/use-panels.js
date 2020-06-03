@@ -23,17 +23,11 @@ export default function usePanels(initialActivePanel) {
     });
   }, [setActivePanel]);
 
-  const goForward = useCallback((e) => {
-    if (!(e.currentTarget instanceof HTMLElement)) {
-      return;
-    }
-
-    const nextPanel = e.currentTarget.dataset.to;
+  const goForward = useCallback((nextPanel) => {
     followActivePanel(nextPanel);
-
     setHistory(history => [...history, nextPanel]);
     router.push(nextPanel);
-  }, [initialActivePanel]);
+  }, [setHistory, followActivePanel]);
 
   const goBack = useCallback(() => router.back(), []);
 
