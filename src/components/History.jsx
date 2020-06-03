@@ -36,7 +36,9 @@ const History = () => {
         return (
           <div className="History__item" key={item.id}>
             <div className="History__item--left">
-              <img src={creator.user.avatar} alt={creator.user.id} className="History__item-avatar" />
+              <a target="_blank" rel="noreferrer" href={`https://vk.com/id${creator.user.vk_user_id}`}>
+                <img src={creator.user.avatar} alt={creator.user.id} className="History__item-avatar" />
+              </a>
               <div className="History__item-info">
                 <div>{creator.points}</div>
                 <div>{creator.user.first_name}</div>
@@ -58,7 +60,9 @@ const History = () => {
                 <div>{opponent.points}</div>
                 <div>{opponent.user.first_name}</div>
               </div>
-              <img src={opponent.user.avatar} alt={opponent.user.id} className="History__item-avatar" />
+              <a target="_blank" rel="noreferrer" href={`https://vk.com/id${opponent.user.vk_user_id}`}>
+                <img src={opponent.user.avatar} alt={opponent.user.id} className="History__item-avatar" />
+              </a>
             </div>
           </div>
         );
