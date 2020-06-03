@@ -54,6 +54,7 @@ const Base = () => {
         return sendError(error, raw, source).then((send) => {
           switch (send.type) {
             case 'bridge':
+            case 'network':
               return;
             case 'join':
               global.store.modal.content = (

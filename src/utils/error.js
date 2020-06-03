@@ -49,6 +49,7 @@ export default (morph = window.event, raw, source) => {
 
   if (payload) {
     send.type = 'bridge';
+    send.payload = payload;
   } else {
     let msg = null;
     let err = null;
@@ -65,7 +66,12 @@ export default (morph = window.event, raw, source) => {
       msg = String(morph);
     }
 
-    send.payload = `${msg}\r\n${err}`;
+    if (msg === 'Network Error') {
+      send.type = 'network';
+      return Promise.resolve(send);
+    } else {
+      send.payload = `${msg}\r\n${err}`;
+    }
   }
 
   if (process.env.NODE_ENV === 'production') {
