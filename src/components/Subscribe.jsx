@@ -8,7 +8,7 @@ import { APP_GROUP } from '../utils/constants';
 const Subscribe = () => {
   const global = useGlobal();
   const platform = usePlatform();
-  const [follower, setFollower] = useState(global.store.user?.is_follower || global.bridge.supports('VKWebAppJoinGroup'));
+  const [follower, setFollower] = useState(global.store.user?.is_follower || !global.bridge.supports('VKWebAppJoinGroup'));
 
   const follow = useCallback(() => {
     if (!follower) {
