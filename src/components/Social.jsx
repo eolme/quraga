@@ -52,16 +52,16 @@ const Social = ({ callback }) => {
     <CSSTransition in={Boolean(friends)} appear={true} classNames="fade" timeout={platform === ANDROID ? 300 : 600}>
       {
         friends && friends.length ? (
-          <Tappable className="Social Social-stub" onClick={open}>
-            <div className="Social-in">
+          <div className="Social Social-stub">
+            <Tappable className="Social-in" id="social" onClick={open}>
               <div className="Social__caption">
                 Твои друзья уже тут!
               </div>
               <div className="Social__content">
                 {avatars}
               </div>
-            </div>
-          </Tappable>
+            </Tappable>
+          </div>
         ) : (
           <div className="Social-stub" />
         )

@@ -489,6 +489,11 @@
   margin-right: -10px;
 }
 
+#social.Tappable--active {
+  background: var(--button_primary_background) !important;
+  opacity: 0.6;
+}
+
 @media (min-width: 480px) {
   .History-in {
     max-width: 430px;
@@ -648,7 +653,7 @@
 
 .Rating__item-place {
   font-size: 16px;
-  min-width: 36px;
+  min-width: 24px;
   font-weight: 500;
   flex-shrink: 0;
 }
@@ -665,27 +670,43 @@
   width: 30px;
   height: 30px;
   border-radius: 999em;
-  margin-left: 5px;
+  margin-left: 6px;
   flex-shrink: 0;
   overflow: hidden;
 }
 
+@media (min-width: 374px) {
+  .Rating__item-link {
+    margin-left: 12px;
+  }
+}
+
 .Rating__item-caption {
-  margin-left: 18px;
+  margin-left: 12px;
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 1;
   min-width: 0;
+  margin-right: auto;
 }
 
 .Rating__item-content {
-  padding: 5px 18px;
+  padding: 0 12px;
   font-weight: 600;
   background-color: var(--app-table);
   border-radius: 20px;
-  margin-left: auto;
+  margin-left: 6px;
   flex-shrink: 0;
+  line-height: 28px;
+}
+
+@media (min-width: 374px) {
+  .Rating__item-content {
+    min-width: 56px;
+    text-align: center;
+    margin-left: 12px;
+  }
 }
 
 .Stage {
@@ -1251,7 +1272,6 @@
   padding: 0 20px;
   box-sizing: border-box;
 
-  overflow: hidden;
   border-radius: 12px;
   box-shadow: 0px 2px 14px rgba(0, 0, 0, 0.1);
 
@@ -1314,4 +1334,8 @@
   .Subscribe__image {
     display: block;
   }
+}
+
+#subscribe.Tappable--active {
+  background-image: linear-gradient(102deg, hsl(190, 90%, 50%) 4%, hsl(160, 78%, 50%) 94%) !important;
 }

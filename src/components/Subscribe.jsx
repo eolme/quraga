@@ -8,7 +8,7 @@ import { APP_GROUP } from '../utils/constants';
 const Subscribe = () => {
   const global = useGlobal();
   const platform = usePlatform();
-  const [follower, setFollower] = useState(global.store.user?.is_follower || !global.bridge.supports('VKWebAppJoinGroup'));
+  const [follower, setFollower] = useState(global.store.user?.is_follower || global.bridge.supports('VKWebAppJoinGroup'));
 
   const follow = useCallback(() => {
     if (!follower) {
@@ -27,8 +27,8 @@ const Subscribe = () => {
     <CSSTransition in={Boolean(!follower)} appear={true} classNames="fade" timeout={platform === ANDROID ? 300 : 600}>
       {
         !follower ? (
-          <Tappable className="Subscribe Subscribe-stub" onClick={follow}>
-            <div className="Subscribe-in">
+          <div className="Subscribe Subscribe-stub">
+            <Tappable className="Subscribe-in" id="subscribe" onClick={follow}>
               <div className="Subscribe__caption">
                 Подпишись на нас
               </div>
@@ -41,8 +41,8 @@ const Subscribe = () => {
                 alt="Единорог"
                 className="Subscribe__image"
               />
-            </div>
-          </Tappable>
+            </Tappable>
+          </div>
         ) : (
           <div className="Subscribe-stub" />
         )
