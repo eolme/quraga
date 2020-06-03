@@ -513,10 +513,14 @@
   border-top: 1px solid var(--app-table);
 }
 
+.History__item-link,
 .History__item-avatar {
+  display: block;
   width: 30px;
   height: 30px;
+}
 
+.History__item-link {
   border-radius: 999em;
   overflow: hidden;
 }
@@ -540,7 +544,7 @@
   text-align: left;
 }
 
-.History__item--left .History__item-avatar {
+.History__item--left .History__item-link {
   margin-right: 8px;
 }
 
@@ -549,7 +553,7 @@
   text-align: right;
 }
 
-.History__item--right .History__item-avatar {
+.History__item--right .History__item-link {
   margin-left: 8px;
 }
 
@@ -633,12 +637,21 @@
   flex-shrink: 0;
 }
 
+.Rating__item-link,
 .Rating__item-avatar {
+  display: block;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+}
+
+.Rating__item-link {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 999em;
   margin-left: 5px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .Rating__item-caption {

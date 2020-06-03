@@ -28,7 +28,7 @@ const RatingTable = ({ mode }) => {
     return (
       <div className="Rating__item" key="self">
         <div className="Rating__item-place">{modePlace}</div>
-        <a target="_blank" rel="noreferrer" href={`https://vk.com/id${me.vk_user_id}`}>
+        <a target="_blank" rel="noreferrer" href={`https://vk.com/id${me.vk_user_id}`} className="Rating__item-link">
           <img className="Rating__item-avatar" src={me.avatar} alt={me.id}/>
         </a>
         <div className="Rating__item-caption">{me.first_name}</div>
@@ -43,7 +43,7 @@ const RatingTable = ({ mode }) => {
         return (
           <div className="Rating__item" key={item.id}>
             <div className="Rating__item-place">{index + 1}</div>
-            <a target="_blank" rel="noreferrer" href={`https://vk.com/id${item.vk_user_id}`}>
+            <a target="_blank" rel="noreferrer" href={`https://vk.com/id${item.vk_user_id}`} className="Rating__item-link">
               <img className="Rating__item-avatar" src={item.avatar} alt={item.id}/>
             </a>
             <div className="Rating__item-caption">{item.first_name}</div>
