@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 import RatingTable from '../components/RatingTable';
 import RatingRules from '../components/RatingRules';
+import Subscribe from '../components/Subscribe';
 
 import useGlobal from '../hooks/use-global';
 
@@ -56,6 +57,7 @@ const Rating = ({ id, callback }) => {
       <Header title="Рейтинг" onBack={callback}/>
       <Div>
         <h1 className="PanelTitle">ТОП-10 <Button className="PanelTitle--after" onClick={showModal}>Подробнее</Button></h1>
+        <Subscribe />
         <Tabs>
           <TabsItem
             onClick={tabOnClick.bind(null, 0)}

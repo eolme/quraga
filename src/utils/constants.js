@@ -4,6 +4,7 @@ export const URL_API = process.env.REACT_APP_API_URL;
 export const APP_LINK = process.env.REACT_APP_APP_LINK;
 export const APP_ID = +process.env.REACT_APP_APP_ID;
 export const APP_SUPPORT = process.env.REACT_APP_APP_SUPPORT;
+export const APP_GROUP = +process.env.REACT_APP_APP_GROUP;
 
 export const SHARE_MESSAGE = `Заходи в QURAGU, поиграем!\r\n\r\n#quraga #умнейдома #лучшедома`;
 export const SHARE_IMAGE = {
