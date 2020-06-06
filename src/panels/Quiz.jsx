@@ -49,7 +49,7 @@ const Quiz = ({id}) => {
   const [type, setType] = useState(null);
   const [view, setView] = useState(null);
   const [badge, setBadge] = useState(null);
-  const [question, setQuestion] = useState(null);
+  const [question, setQuestion] = useState({ id: null });
   const [answer, setAnswer] = useState(null);
   const [percent, setPercent] = useState(50);
   const [points, setPoints] = useState({creator: 0, opponent: 0});
@@ -180,7 +180,7 @@ const Quiz = ({id}) => {
   }, [answer]);
 
   const answers = useMemo(() => {
-    if (question) {
+    if (question.id !== null) {
       const onAnswerClick = (id) => {
         if (renderAnswered || immediateAnswered) {
           return;
@@ -457,47 +457,56 @@ const Quiz = ({id}) => {
     let timeout = null;
 
     global.socket.on('game-invite', (game) => {
-      if (game.creator.id === global.store.game[global.store.game.vs].id) {
-        const deny = () => {
-          global.bus.emit('modal:close');
-        };
-
-        const accept = () => {
-          global.socket.emit('connect-to-online-game', game);
-        };
-
-        global.bus.once('modal:updated', () => {
-          global.bus.emit('modal:open');
-        });
-
-        global.store.modal.content = (
-          <Div className="Recreate">
-            <div className="RecreateMessage">
-              <img
-                src={global.store.game[global.store.game.vs].avatar}
-                alt={global.store.game[global.store.game.vs].id}
-                className="RecreateMessage__avatar"
-              />
-              <div className="RecreateMessage__content">
-                <span>Йо, {
-                  points[global.store.game.is] < points[global.store.game.vs] ?
-                    'может реванш' : 'ещё одну'
-                }?</span>
-                <img
-                  src={require(/* webpackPreload: true */ '../assets/vs.png')}
-                  alt=""
-                  className="RecreateMessage__icon"
-                />
-              </div>
-            </div>
-            <div className="GameResult__content">
-              <Button onClick={deny} className="GameResult__button">Отклонить</Button>
-              <Button onClick={accept} className="GameResult__button Button--blue">Принять</Button>
-            </div>
-          </Div>
-        );
-        global.bus.emit('modal:update');
+      if (!global.store.game[global.store.game.vs]) {
+        global.socket.emit('decline-invite', game);
+        return;
       }
+
+      if (game.creator.id !== global.store.game[global.store.game.vs].id) {
+        global.socket.emit('decline-invite', game);
+        return;
+      }
+
+      const deny = () => {
+        global.socket.emit('decline-invite', game);
+        global.bus.emit('modal:close');
+      };
+
+      const accept = () => {
+        global.socket.emit('connect-to-online-game', game);
+      };
+
+      global.bus.once('modal:updated', () => {
+        global.bus.emit('modal:open');
+      });
+
+      global.store.modal.content = (
+        <Div className="Recreate">
+          <div className="RecreateMessage">
+            <img
+              src={global.store.game[global.store.game.vs].avatar}
+              alt={global.store.game[global.store.game.vs].id}
+              className="RecreateMessage__avatar"
+            />
+            <div className="RecreateMessage__content">
+              <span>Йо, {
+                points[global.store.game.is] < points[global.store.game.vs] ?
+                  'может реванш' : 'ещё одну'
+              }?</span>
+              <img
+                src={require(/* webpackPreload: true */ '../assets/vs.png')}
+                alt=""
+                className="RecreateMessage__icon"
+              />
+            </div>
+          </div>
+          <div className="GameResult__content">
+            <Button onClick={deny} className="GameResult__button">Отклонить</Button>
+            <Button onClick={accept} className="GameResult__button Button--blue">Принять</Button>
+          </div>
+        </Div>
+      );
+      global.bus.emit('modal:update');
     });
 
     global.socket.on('game-created', (game) => {
