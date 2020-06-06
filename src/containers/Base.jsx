@@ -129,7 +129,7 @@ const Base = () => {
           ...global.store.user,
           ...user
         };
-        global.bus.emit('app:auth', global.store.user);
+        global.bus.emit('app:auth');
       });
     };
 

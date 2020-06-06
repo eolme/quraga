@@ -18,7 +18,7 @@ export default (morph = window.event, raw, source) => {
     type: null
   };
 
-  if (morph === 'join:error') {
+  if (source === 'join:error') {
     send.type = 'join';
     return Promise.resolve(send);
   }

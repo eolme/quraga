@@ -52,7 +52,7 @@ const App = () => {
       } else {
         if (shouldShowError) {
           global.bus.once('app:auth', () => {
-            global.bus.emit('join:error', null, 'join:error');
+            global.bus.emit('join:error');
           });
         }
         global.bus.emit('app:update');

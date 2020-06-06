@@ -48,11 +48,11 @@ const Main = ({ id, callback }) => {
 
         if (global.store.user.id) {
           global.store.user.history = history;
-          global.bus.emit('app:history', global.store.user.history);
+          global.bus.emit('app:history');
         } else {
           global.bus.once('app:auth', () => {
             global.store.user.history = history;
-            global.bus.emit('app:history', global.store.user.history);
+            global.bus.emit('app:history');
           });
         }
       });

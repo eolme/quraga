@@ -20,7 +20,7 @@ window.addEventListener('popstate', (e) => {
   const last = router.state;
   router.state = e.state;
   setTimeout(() => {
-    global.bus.emit('router:popstate', null, last);
+    global.bus.emit('router:popstate', last);
   }, 0);
 });
 
