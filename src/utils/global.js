@@ -1,4 +1,4 @@
-import Bus from 'js-event-bus';
+import bus from './bus';
 import axios from './axios';
 import io from 'socket.io-client';
 import bridge from './bridge';
@@ -10,8 +10,6 @@ import { parseQuery } from '../utils/uri';
 import { getUTCOffset } from '../utils/date';
 
 import { URL_SOCKET, URL_API } from '../utils/constants';
-
-const bus = new Bus();
 
 const VKParams = window.btoa(JSON.stringify({
   ...parseQuery(window.location.search),
