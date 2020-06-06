@@ -42,6 +42,7 @@
   font-size: 12px;
   line-height: 30px;
   height: 30px;
+  box-sizing: border-box;
 
   margin: 6px 0 8px 0;
 }
