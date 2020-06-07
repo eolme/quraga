@@ -26,7 +26,6 @@ const socket = io(URL_SOCKET, {
 
 const axiosInstance = axios.create({
   baseURL: URL_API,
-  timeoutErrorMessage: 'Network Error',
   headers: {
     'Vk-Params': VKParams,
     'Accept': 'application/json'

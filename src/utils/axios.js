@@ -1,6 +1,6 @@
 import axios from 'axios';
-import retry from 'axios-retry';
 
-retry(axios, { retries: 3, shouldResetTimeout: true });
+axios.defaults.timeout = 0;
+axios.defaults.timeoutErrorMessage = 'Network Error';
 
 export default axios;
