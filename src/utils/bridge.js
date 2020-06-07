@@ -23,11 +23,14 @@ bridge.send = bridge.sendPromise = (name, params) => {
 
     return data;
   }).catch((error) => {
-    if (error.error_type === 'client_error') {
-      const code = Number(error.error_data.error_code);
-      const reason = String(error.error_data.error_reason).toLowerCase();
+    if (error && error.error_data) {
+      const code = Number(error.error_data.error_code ?? error.error_data.error);
 
-      if (code === 4 || reason === 'user denied') {
+      if (code === 4) {
+        return { result: false };
+      }
+
+      if (code === 9) {
         return { result: false };
       }
     }
