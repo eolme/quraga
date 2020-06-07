@@ -1,14 +1,14 @@
 import global from './global';
 
 const isVKBrdigeError = (morph) => {
-  return Boolean(morph && morph.error_type);
+  return Boolean(morph && (morph.error_type || morph.error_data));
 };
 
 const parseVKBridgeError = (error) => {
   return `${
-    error.error_data?.error_reason ?? error.error_type
+    error.error_type ?? 'bridge_error'
   }\r\n${
-    error.error_data?.error_description ?? error.error_data?.error_msg
+    error.error_data?.error_description ?? error.error_data?.error_msg ?? error.error_data?.error_reason
   }`;
 };
 
