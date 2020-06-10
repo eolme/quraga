@@ -55,25 +55,26 @@ const Base = () => {
           switch (send.type) {
             case 'bridge':
             case 'network':
-              return;
+              return false;
             case 'join':
               global.store.modal.content = (
                 <JoinError />
               );
-              break;
+              return true;
             case 'game':
               global.store.modal.content = (
                 <GameError code={send.payload} />
               );
-              break;
+              return true;
             default:
               global.store.modal.content = (
                 <CommonError />
               );
-              break;
+              return true;
           }
         }).catch((e) => {
           console.error(e);
+          return false;
         });
       };
 
@@ -101,14 +102,15 @@ const Base = () => {
         });
       };
 
-      Promise.all([
-        send(),
-        prepare()
-      ]).then(() => {
-        global.bus.once('modal:updated', () => {
-          global.bus.emit('modal:open');
-        });
-        global.bus.emit('modal:update');
+      send().then((result) => {
+        if (result) {
+          return prepare().then(() => {
+            global.bus.once('modal:updated', () => {
+              global.bus.emit('modal:open');
+            });
+            global.bus.emit('modal:update');
+          });
+        }
       });
     };
 
