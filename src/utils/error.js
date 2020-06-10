@@ -1,14 +1,21 @@
 import global from './global';
+import pkg from '../../package.json';
 
-const isVKBrdigeError = (morph) => {
-  return Boolean(morph && (morph.error_type || morph.error_data));
+const getVKBrdigeError = (list) => {
+  return list.find((where) => {
+    return where && (where.error_type || where.error_data);
+  });
 };
 
 const parseVKBridgeError = (error) => {
   return `${
     error.error_type ?? 'bridge_error'
   }\r\n${
-    error.error_data?.error_description ?? error.error_data?.error_msg ?? error.error_data?.error_reason
+    error.error_data?.error_description
+  }\r\n${
+    error.error_data?.error_msg
+  }\r\n${
+    error.error_data?.error_reason
   }`;
 };
 
@@ -29,53 +36,31 @@ export default (morph = window.event, raw, source) => {
     return Promise.resolve(send);
   }
 
-  let payload = null;
-
-  if (isVKBrdigeError(raw)) {
-    payload = parseVKBridgeError(raw);
-  }
-
-  if (isVKBrdigeError(morph.error)) {
-    payload = parseVKBridgeError(morph.error);
-  }
-
-  if (isVKBrdigeError(morph.reason)) {
-    payload = parseVKBridgeError(morph.reason);
-  }
-
-  if (isVKBrdigeError(morph)) {
-    payload = parseVKBridgeError(morph);
-  }
-
+  const payload = getVKBrdigeError([raw, morph.error, morph.reason, morph]);
   if (payload) {
     send.type = 'bridge';
-    send.payload = payload;
+    send.payload = parseVKBridgeError(payload);
   } else {
-    let msg = null;
-    let err = null;
-
+    let reason;
     if (morph instanceof Event) {
-      msg = (morph.error ?? morph.reason)?.message ?? morph.message ?? morph.type;
-      const stack = raw?.stack ?? morph.error?.stack;
-      if (stack) {
-        err = stack;
-      } else {
-        err = source ?? morph.filename;
-      }
+      reason = morph.error ?? morph.reason ?? morph;
     } else {
-      msg = String(morph);
+      reason = morph ?? {};
     }
 
-    if (msg === 'Network Error') {
+    raw = raw ?? {};
+    const msg = [morph.message, morph.type, reason.message, reason.type, raw.message, raw.type];
+    if (msg.includes('NetworkError')) {
       send.type = 'network';
       return Promise.resolve(send);
     } else {
-      send.payload = `${msg}\r\n${err}`;
+      msg.push(raw.stack, reason.stack, reason.description, source, raw.fileName);
+      send.payload = msg.filter((value) => value).join('\r\n');
     }
   }
 
   if (process.env.NODE_ENV === 'production') {
-    return global.axios.post('/vk-user/error-log', { payload: send.payload }).then(() => {
+    return global.axios.post('/vk-user/error-log', { payload: `${pkg.version}\r\n${send.payload}` }).then(() => {
       return send;
     });
   } else {
