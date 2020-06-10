@@ -356,47 +356,50 @@ const Quiz = ({id}) => {
           setView(
             <div className="Stage">
               {
-                global.store.game[global.store.game.vs].id === -1 ? (
-                  <>
-                    <img
-                      src={require(/* webpackPreload: true */ '../assets/win.png')}
-                      alt="Молодец"
-                      className="GameResult__image"
-                    />
-                    <div className="GameResult__title">Молодец!</div>
-                  </>
-                ) : (
-                  points[global.store.game.is] === points[global.store.game.vs] ? (
+                (
+                  !global.store.game[global.store.game.vs] ||
+                  global.store.game[global.store.game.vs].id === -1
+                ) ? (
                     <>
                       <img
                         src={require(/* webpackPreload: true */ '../assets/win.png')}
-                        alt="Ничья"
+                        alt="Молодец"
                         className="GameResult__image"
                       />
-                      <div className="GameResult__title">Ничья!</div>
+                      <div className="GameResult__title">Молодец!</div>
                     </>
                   ) : (
-                    points[global.store.game.is] > points[global.store.game.vs] ? (
+                    points[global.store.game.is] === points[global.store.game.vs] ? (
                       <>
                         <img
                           src={require(/* webpackPreload: true */ '../assets/win.png')}
-                          alt="Победа"
+                          alt="Ничья"
                           className="GameResult__image"
                         />
-                        <div className="GameResult__title">Победа!</div>
+                        <div className="GameResult__title">Ничья!</div>
                       </>
                     ) : (
-                      <>
-                        <img
-                          src={require(/* webpackPreload: true */ '../assets/lose.png')}
-                          alt="Поражение"
-                          className="GameResult__image"
-                        />
-                        <div className="GameResult__title">Поражение!</div>
-                      </>
+                      points[global.store.game.is] > points[global.store.game.vs] ? (
+                        <>
+                          <img
+                            src={require(/* webpackPreload: true */ '../assets/win.png')}
+                            alt="Победа"
+                            className="GameResult__image"
+                          />
+                          <div className="GameResult__title">Победа!</div>
+                        </>
+                      ) : (
+                        <>
+                          <img
+                            src={require(/* webpackPreload: true */ '../assets/lose.png')}
+                            alt="Поражение"
+                            className="GameResult__image"
+                          />
+                          <div className="GameResult__title">Поражение!</div>
+                        </>
+                      )
                     )
                   )
-                )
               }
               <div className="GameResult__caption">Верных ответов: {global.store.game.success}</div>
               <div className="GameResult">
@@ -410,7 +413,10 @@ const Quiz = ({id}) => {
                   <div className="GameResult__title">{points[global.store.game.is]}</div>
                 </div>
                 {
-                  global.store.game[global.store.game.vs].id !== -1 && (
+                  (
+                    global.store.game[global.store.game.vs] &&
+                    global.store.game[global.store.game.vs].id !== -1
+                  ) && (
                     <>
                       <div className="GameResult__item">
                         <img
@@ -526,7 +532,7 @@ const Quiz = ({id}) => {
         const share = () => shareLink(link);
 
         global.bus.once('modal:updated', () => {
-          if (global.store.mode === 'multi') {
+          if (global.store.mode === 'multi' || !global.store.game[global.store.game.vs]) {
             window.requestAnimationFrame(() => {
               setTimeout(() => {
                 window.requestAnimationFrame(() => {
@@ -894,6 +900,7 @@ const Quiz = ({id}) => {
       {
         type === 'question' &&
         global.store.game &&
+        global.store.game[global.store.game.vs] &&
         global.store.game[global.store.game.vs].id !== -1 &&
         (
           <>
