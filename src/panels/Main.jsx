@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Panel, Div, usePlatform, ANDROID, Tappable } from '@vkontakte/vkui';
+import {Panel, Div, usePlatform, ANDROID, Tappable, FixedLayout, PromoBanner} from '@vkontakte/vkui';
 import { CSSTransition } from 'react-transition-group';
+import bridge from '@vkontakte/vk-bridge';
 
 import Header from '../components/Header';
 import Social from '../components/Social';
@@ -17,6 +18,7 @@ const Main = ({ id, callback }) => {
   const global = useGlobal();
   const platform = usePlatform();
   const [loaded, updateLoadState] = useState(false);
+  const [bannerData, setBannerData] = useState(null);
   const [stats, updateStats] = useState({
     games_count: '00',
     wins_count: '00',
@@ -75,8 +77,16 @@ const Main = ({ id, callback }) => {
       }
     };
 
+    const fetchAds = () => {
+      bridge.send('VKWebAppGetAds')
+        .then((data) => {
+          setBannerData(data);
+        });
+    };
+
     checkShowCallback();
     fetchHistory();
+    fetchAds();
 
     let timer = setInterval(fetchHistory, 5E3); // 5s
     global.bus.on('app:update', fetchHistory);
@@ -152,6 +162,9 @@ const Main = ({ id, callback }) => {
                   )
                 )
               }
+              {bannerData && <FixedLayout vertical="bottom">
+                <PromoBanner bannerData={bannerData}  onClose={() => setBannerData(null)}/>
+              </FixedLayout>}
             </Div>
           ) : (
             <Div />

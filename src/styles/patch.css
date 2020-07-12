@@ -170,3 +170,30 @@ img {
 .Spinner {
   margin: auto;
 }
+
+.PromoBanner {
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 20px);
+  outline: none;
+  margin: 0 10px 10px;
+}
+
+.PromoBanner__label {
+  color: #000;
+}
+
+.PromoBanner .SimpleCell__children {
+  color: #000;
+}
+
+.PromoBanner__age {
+  color: #000;
+}
+
+.PromoBanner .SimpleCell__description {
+  color: #000;
+  opacity: .5;
+}
