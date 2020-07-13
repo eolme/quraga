@@ -11,7 +11,7 @@ import {
   Tappable,
   Spinner
 } from '@vkontakte/vkui';
-import transitionEvents from '@vkontakte/vkui/dist/lib/transitionEvents';
+import { transitionEvent } from '@vkontakte/vkui/dist/lib/supportEvents';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
 import useDOMRef from '../hooks/use-dom-ref';
@@ -886,8 +886,8 @@ const Quiz = ({id}) => {
         <CSSTransition
           key={memoType}
           addEndListener={(node, done) => {
-            if (transitionEvents.supported) {
-              node.addEventListener(transitionEvents.transitionEndEventName, done, false);
+            if (transitionEvent.supported) {
+              node.addEventListener(transitionEvent.name, done, false);
             } else {
               setTimeout(done, 300);
             }
