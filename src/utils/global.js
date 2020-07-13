@@ -28,7 +28,8 @@ const axiosInstance = axios.create({
   baseURL: URL_API,
   headers: {
     'Vk-Params': VKParams,
-    'Accept': 'application/json'
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
   }
 });
 
