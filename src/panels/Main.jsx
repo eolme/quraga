@@ -78,10 +78,11 @@ const Main = ({ id, callback }) => {
     };
 
     const fetchAds = () => {
-      bridge.send('VKWebAppGetAds')
-        .then((data) => {
+      if (bridge.supports('VKWebAppGetAds')) {
+        bridge.send('VKWebAppGetAds').then((data) => {
           setBannerData(data);
         });
+      }
     };
 
     checkShowCallback();
@@ -98,6 +99,10 @@ const Main = ({ id, callback }) => {
       global.bus.detach('app:auth', checkShowCallback);
       global.bus.detach('app:history', checkHistory);
     };
+  }, []);
+
+  const closeBanner = useCallback(() => {
+    setBannerData(null);
   }, []);
 
   return (
@@ -162,9 +167,11 @@ const Main = ({ id, callback }) => {
                   )
                 )
               }
-              {bannerData && <FixedLayout vertical="bottom">
-                <PromoBanner bannerData={bannerData}  onClose={() => setBannerData(null)}/>
-              </FixedLayout>}
+              {bannerData && (
+                <FixedLayout vertical="bottom">
+                  <PromoBanner bannerData={bannerData} onClose={closeBanner}/>
+                </FixedLayout>
+              )}
             </Div>
           ) : (
             <Div />
