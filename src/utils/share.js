@@ -8,8 +8,7 @@ const shareLink = (link = APP_LINK) => {
     global.bridge.send('VKWebAppShare', { link });
   } else if ('share' in window.navigator) {
     window.navigator.share({
-      title: document.title,
-      text: link
+      title: link
     });
   } else {
     window.open(`https://vk.com/share.php?url=${link}`, '_blank');
@@ -25,8 +24,7 @@ const shareMessage = (message = SHARE_MESSAGE) => {
     });
   } else if ('share' in window.navigator) {
     window.navigator.share({
-      title: document.title,
-      text: linkedMessage
+      title: linkedMessage
     });
   } else {
     window.open(`https://vk.com/share.php?url=${APP_LINK}`, '_blank');
