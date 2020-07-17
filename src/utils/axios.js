@@ -44,12 +44,12 @@ const unaxios = (options) => {
     for (const i in headers) {
       request.setRequestHeader(i, headers[i]);
     }
-    request.send(options.body || null);
+    request.send(options.data || null);
   });
 };
 
 ['get', 'post'].forEach((method) => {
-  unaxios[method] = (url, body) => unaxios({ url, body: JSON.stringify(body), method });
+  unaxios[method] = (url, data) => unaxios({ url, data: JSON.stringify(data), method });
 });
 
 unaxios.create = (config) => {
