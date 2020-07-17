@@ -1,22 +1,38 @@
 import global from './global';
 import pkg from '../../package.json';
 
+const createErrorMessage = (arr) => arr.filter((value) => value).join('\r\n');
+
 const getVKBrdigeError = (list) => {
   return list.find((where) => {
     return where && (where.error_type || where.error_data);
   });
 };
 
-const parseVKBridgeError = (error) => {
-  return `${
-    error.error_type ?? 'bridge_error'
-  }\r\n${
-    error.error_data?.error_description
-  }\r\n${
-    error.error_data?.error_msg
-  }\r\n${
-    error.error_data?.error_reason
-  }`;
+const BaseBridgeError = {
+  error_type: 'bridge_error',
+  error_data: {
+    error_code: 1,
+    error_reason: 'Unknown error'
+  }
+};
+
+const parseVKBridgeError = (error = BaseBridgeError, nested) => {
+  const type = error.error_type ?? BaseBridgeError.error_type;
+  const data = error.error_data ?? BaseBridgeError.error_data;
+  const code = data.error_code ?? data.error ?? '';
+  const desc = data.error_description ?? data.error_msg ?? '';
+
+  let reason = '';
+  if (!nested) {
+    if (typeof data.error_reason === 'object') {
+      reason = parseVKBridgeError(data.error_reason, true);
+    } else {
+      reason = data.error_reason ?? reason;
+    }
+  }
+
+  return createErrorMessage([type, code, desc, reason]);
 };
 
 export default (morph = window.event, raw, source) => {
@@ -39,7 +55,7 @@ export default (morph = window.event, raw, source) => {
   const payload = getVKBrdigeError([raw, morph.error, morph.reason, morph]);
   if (payload) {
     send.type = 'bridge';
-    send.payload = parseVKBridgeError(payload);
+    send.payload = parseVKBridgeError(payload, false);
   } else {
     let reason;
     if (morph instanceof Event) {
@@ -55,7 +71,7 @@ export default (morph = window.event, raw, source) => {
       return Promise.resolve(send);
     } else {
       msg.push(raw.stack, reason.stack, reason.description, source, raw.fileName);
-      send.payload = msg.filter((value) => value).join('\r\n');
+      send.payload = createErrorMessage(msg);
     }
   }
 
