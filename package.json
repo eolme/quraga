@@ -65,14 +65,14 @@
     "react-transition-group": "^4.4.1",
     "socket.io-client": "^2.3.0",
     "ssr-window": "^2.0.0",
-    "worker-timers": "^6.0.15",
-    "worker-timers-broker": "^6.0.14"
+    "worker-timers": "^6.0.17",
+    "worker-timers-broker": "^6.0.16"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.4",
+    "@babel/core": "^7.10.5",
     "@babel/plugin-transform-react-constant-elements": "^7.10.4",
     "@babel/plugin-transform-react-inline-elements": "^7.10.4",
-    "@babel/runtime": "^7.10.4",
+    "@babel/runtime": "^7.10.5",
     "@types/react": "^16.9.43",
     "@types/react-dom": "^16.9.8",
     "@types/react-transition-group": "^4.4.0",
@@ -94,7 +94,7 @@
     "react-app-rewired": "^2.1.6",
     "source-map-explorer": "^2.4.2",
     "stylelint": "^13.6.1",
-    "typescript": "^3.9.6",
+    "typescript": "^3.9.7",
     "webpack": "4.42.0"
   },
   "resolutions": {
