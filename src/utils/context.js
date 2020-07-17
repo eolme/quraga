@@ -31,6 +31,7 @@ if (!('window' in context)) {
   context.window = windowFallback;
 }
 
+require('blueimp-canvas-to-blob');
 raf.polyfill(context.window);
 
 if (!('document' in context)) {

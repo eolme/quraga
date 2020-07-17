@@ -54,6 +54,7 @@
     "@vkontakte/vkui": "^3.11.7",
     "axios": "^0.19.2",
     "axios-retry": "^3.1.8",
+    "blueimp-canvas-to-blob": "^3.27.0",
     "prop-types": "^15.7.2",
     "raf": "^3.4.1",
     "react": "^16.13.1",
