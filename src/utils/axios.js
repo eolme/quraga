@@ -41,6 +41,9 @@ const unaxios = (options) => {
     request.onabort = abort;
     request.ontimeout = abort;
     const headers = { ...unaxios.defaults.headers, ...options.headers };
+    if (options.data instanceof FormData) {
+      delete headers['Content-Type']; // auto boundary
+    }
     for (const i in headers) {
       request.setRequestHeader(i, headers[i]);
     }

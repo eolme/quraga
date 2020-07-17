@@ -184,10 +184,7 @@ const shareWall = () => {
     return global.axios({
       method: 'post',
       url: `/vk-user/cors?url=${encodeURIComponent(upload.uri)}`,
-      data,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      data
     }).then((response) => {
       return saveWallImage(interpretResponse(response), upload.token);
     });
