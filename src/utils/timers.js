@@ -12,7 +12,15 @@ window._clearInterval = window.setInterval.bind(window);
 
 // Web Worker doesn't work well in Android WebView
 const isAndroidWebView = bridge.isWebView() && platform() === ANDROID;
-if (!isAndroidWebView) {
+
+// Need native Map support
+let nativeMapSupport = false;
+try {
+  nativeMapSupport = typeof Map !== 'undefined' &&
+    String(Function.prototype.toString.call(Map)).includes('native code');
+} catch { /* ignore  */ }
+
+if (!isAndroidWebView && nativeMapSupport) {
   const safeTimer = (by, fallback) => {
     return (callback, time) => {
       if (callback) {
