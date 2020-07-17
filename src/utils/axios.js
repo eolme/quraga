@@ -40,7 +40,7 @@ const unaxios = (options) => {
     request.onerror = abort;
     request.onabort = abort;
     request.ontimeout = abort;
-    const headers = unaxios.defaults.headers;
+    const headers = { ...unaxios.defaults.headers, ...options.headers };
     for (const i in headers) {
       request.setRequestHeader(i, headers[i]);
     }
