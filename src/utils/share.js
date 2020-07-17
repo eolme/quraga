@@ -148,7 +148,7 @@ const getWallUpload = () => {
         method: 'photos.getWallUploadServer',
         params: {
           access_token,
-          v: '5.103'
+          v: '5.120'
         }
       }).then((data) => {
         return {
@@ -167,7 +167,7 @@ const saveWallImage = (model, token) => {
     method: 'photos.saveWallPhoto',
     params: {
       access_token: token,
-      v: '5.103',
+      v: '5.120',
       ...model
     }
   }).then((data) => {
