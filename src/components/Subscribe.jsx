@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
 import { Tappable, usePlatform, ANDROID } from '@vkontakte/vkui';
+import { Photo } from './Photo';
 
 import { APP_GROUP } from '../utils/constants';
 
@@ -36,9 +37,8 @@ const Subscribe = () => {
                 Новости, конкурсы и единороги
               </div>
               <div className="Subscribe__badge">VK</div>
-              <img
+              <Photo
                 src={require(/* webpackPreload: true */ '../assets/unicorn.png')}
-                alt="Единорог"
                 className="Subscribe__image"
               />
             </Tappable>

@@ -1,3 +1,5 @@
+export { default as DEFAULT_IMAGE } from '../assets/camera.png';
+
 export const URL_SOCKET = process.env.REACT_APP_SOCKET_URL;
 export const URL_API = process.env.REACT_APP_API_URL;
 

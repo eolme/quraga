@@ -6,6 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import Logo from '../components/Logo';
+import { Photo } from '../components/Photo';
 
 const Intro = ({ id, callback }) => {
   const platform = usePlatform();
@@ -45,9 +46,8 @@ const Intro = ({ id, callback }) => {
           </Div>
           <Div>
             <div className="IntroPreview">
-              <img
+              <Photo
                 src={require(/* webpackPreload: true */ '../assets/smile.png')}
-                alt="Друзья"
                 className="IntroPreview--image"
               />
             </div>
@@ -58,9 +58,8 @@ const Intro = ({ id, callback }) => {
           </Div>
           <Div>
             <div className="IntroPreview">
-              <img
+              <Photo
                 src={require(/* webpackPreload: true */ '../assets/categories.png')}
-                alt="Категории"
                 className="IntroPreview--image"
               />
             </div>
@@ -71,9 +70,8 @@ const Intro = ({ id, callback }) => {
           </Div>
           <Div>
             <div className="IntroPreview">
-              <img
+              <Photo
                 src={require(/* webpackPreload: true */ '../assets/emoji.png')}
-                alt="Эмоции"
                 className="IntroPreview--image IntroPreview--top"
               />
             </div>

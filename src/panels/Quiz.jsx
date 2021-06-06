@@ -25,6 +25,7 @@ import Countdown from 'react-countdown';
 import Timer from '../components/Timer';
 import Clock from '../components/Clock';
 import Button from '../components/Button';
+import { Photo } from '../components/Photo';
 
 import { APP_LINK, EMOTION_SIZE, EMOTION_COUNT } from '../utils/constants';
 import { shuffle } from '../utils/data';
@@ -226,7 +227,7 @@ const Quiz = ({id}) => {
                 return model.answer_id === item.id;
               }).map(({ user }) => {
                 return (
-                  <img src={user.avatar} key={user.id} alt={user.id} className="AnswerAvatar" />
+                  <Photo src={user.avatar} key={user.id} className="AnswerAvatar" />
                 );
               })
             }
@@ -249,18 +250,16 @@ const Quiz = ({id}) => {
               <div className="Clock">?</div>
               <div className="GameResult">
                 <div className="GameResult__item">
-                  <img
+                  <Photo
                     src={global.store.user.avatar}
-                    alt={global.store.user.id}
                     className="GameResult__avatar"
                   />
                   <div className="GameResult__caption">{global.store.user.first_name}</div>
                 </div>
                 <div className="GameResult__item">
                   <div className="GameResult__avatar" />
-                  <img
+                  <Photo
                     src={Sleeper.avatar}
-                    alt={Sleeper.id}
                     className="GameResult__fake"
                   />
                   <div className="GameResult__caption">{Sleeper.first_name}</div>
@@ -288,9 +287,8 @@ const Quiz = ({id}) => {
               />
               <div className="GameResult">
                 <div className="GameResult__item">
-                  <img
+                  <Photo
                     src={global.store.game[global.store.game.is].avatar}
-                    alt={global.store.game[global.store.game.is].id}
                     className="GameResult__avatar"
                   />
                   <div className="GameResult__caption">{global.store.game[global.store.game.is].first_name}</div>
@@ -300,16 +298,14 @@ const Quiz = ({id}) => {
                     global.store.game[global.store.game.vs].id === -1 ? (
                       <>
                         <div className="GameResult__avatar" />
-                        <img
+                        <Photo
                           src={global.store.game[global.store.game.vs].avatar}
-                          alt={global.store.game[global.store.game.vs].id}
                           className="GameResult__fake"
                         />
                       </>
                     ) : (
-                      <img
+                      <Photo
                         src={global.store.game[global.store.game.vs].avatar}
-                        alt={global.store.game[global.store.game.vs].id}
                         className="GameResult__avatar"
                       />
                     )
@@ -330,7 +326,7 @@ const Quiz = ({id}) => {
                   renderer={Timer}
                   date={question.ttw}
                 />
-                <img src={require(/* webpackPreload: true */ '../assets/alarm.svg')} alt="Время" className="StageTitle__icon" />
+                <Photo src={require(/* webpackPreload: true */ '../assets/alarm.svg')} className="StageTitle__icon" />
                 <CSSTransition
                   in={Boolean(badge)}
                   appear={true}
@@ -361,9 +357,8 @@ const Quiz = ({id}) => {
                   global.store.game[global.store.game.vs].id === -1
                 ) ? (
                     <>
-                      <img
+                      <Photo
                         src={require(/* webpackPreload: true */ '../assets/win.png')}
-                        alt="Молодец"
                         className="GameResult__image"
                       />
                       <div className="GameResult__title">Молодец!</div>
@@ -371,9 +366,8 @@ const Quiz = ({id}) => {
                   ) : (
                     points[global.store.game.is] === points[global.store.game.vs] ? (
                       <>
-                        <img
+                        <Photo
                           src={require(/* webpackPreload: true */ '../assets/win.png')}
-                          alt="Ничья"
                           className="GameResult__image"
                         />
                         <div className="GameResult__title">Ничья!</div>
@@ -381,18 +375,16 @@ const Quiz = ({id}) => {
                     ) : (
                       points[global.store.game.is] > points[global.store.game.vs] ? (
                         <>
-                          <img
+                          <Photo
                             src={require(/* webpackPreload: true */ '../assets/win.png')}
-                            alt="Победа"
                             className="GameResult__image"
                           />
                           <div className="GameResult__title">Победа!</div>
                         </>
                       ) : (
                         <>
-                          <img
+                          <Photo
                             src={require(/* webpackPreload: true */ '../assets/lose.png')}
-                            alt="Поражение"
                             className="GameResult__image"
                           />
                           <div className="GameResult__title">Поражение!</div>
@@ -404,9 +396,8 @@ const Quiz = ({id}) => {
               <div className="GameResult__caption">Верных ответов: {global.store.game.success}</div>
               <div className="GameResult">
                 <div className="GameResult__item">
-                  <img
+                  <Photo
                     src={global.store.game[global.store.game.is].avatar}
-                    alt={global.store.game[global.store.game.is].id}
                     className="GameResult__avatar"
                   />
                   <div className="GameResult__caption">{global.store.game[global.store.game.is].first_name}</div>
@@ -419,9 +410,8 @@ const Quiz = ({id}) => {
                   ) && (
                     <>
                       <div className="GameResult__item">
-                        <img
+                        <Photo
                           src={global.store.game[global.store.game.vs].avatar}
-                          alt={global.store.game[global.store.game.vs].id}
                           className="GameResult__avatar"
                         />
                         <div className="GameResult__caption">{global.store.game[global.store.game.vs].first_name}</div>
@@ -489,9 +479,8 @@ const Quiz = ({id}) => {
       global.store.modal.content = (
         <Div className="Recreate">
           <div className="RecreateMessage">
-            <img
+            <Photo
               src={global.store.game[global.store.game.vs].avatar}
-              alt={global.store.game[global.store.game.vs].id}
               className="RecreateMessage__avatar"
             />
             <div className="RecreateMessage__content">
@@ -499,9 +488,8 @@ const Quiz = ({id}) => {
                 points[global.store.game.is] < points[global.store.game.vs] ?
                   'может реванш' : 'ещё одну'
               }?</span>
-              <img
+              <Photo
                 src={require(/* webpackPreload: true */ '../assets/vs.png')}
-                alt=""
                 className="RecreateMessage__icon"
               />
             </div>
@@ -694,9 +682,8 @@ const Quiz = ({id}) => {
           {emotionPack.emotions.map((emotion) => {
             return (
               <Tappable className="Emotions__button" onClick={onEmotionClick.bind(null, emotion.id)} key={emotion.id}>
-                <img
+                <Photo
                   className="Emotions__image"
-                  alt={emotion.title}
                   src={emotion.url}
                 />
               </Tappable>
@@ -909,20 +896,18 @@ const Quiz = ({id}) => {
               {global.store.mode !== 'single' && emotions}
               <div className="GamePlayers">
                 <div className="GamePlayers--left">
-                  <img
+                  <Photo
                     ref={targetIsRef}
                     src={global.store.game[global.store.game.is].avatar}
-                    alt={global.store.game[global.store.game.is].id}
                     className="GamePlayers__avatar"
                   />
                   <div>{global.store.game[global.store.game.is].first_name}</div>
                 </div>
                 <div className="GamePlayers--right">
                   <div>{global.store.game[global.store.game.vs].first_name}</div>
-                  <img
+                  <Photo
                     ref={targetVsRef}
                     src={global.store.game[global.store.game.vs].avatar}
-                    alt={global.store.game[global.store.game.vs].id}
                     className="GamePlayers__avatar"
                   />
                 </div>

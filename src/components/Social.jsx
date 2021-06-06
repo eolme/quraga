@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 import useGlobal from '../hooks/use-global';
 import { Tappable, usePlatform, ANDROID } from '@vkontakte/vkui';
+import { Photo } from './Photo';
 
 const Social = ({ callback }) => {
   const [friends, updateFriends] = useState(null);
@@ -36,7 +37,7 @@ const Social = ({ callback }) => {
   const avatars = useMemo(() => {
     if (friends && friends.length) {
       return friends.slice(0, 3).map((friend) => {
-        return (<img key={friend.id} src={friend.avatar} alt={friend.id} />);
+        return (<Photo key={friend.id} src={friend.avatar} />);
       });
     } else {
       return null;

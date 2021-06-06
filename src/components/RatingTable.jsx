@@ -1,7 +1,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
 import useGlobal from '../hooks/use-global';
-import {interpretResponse} from '../utils/data';
+import { interpretResponse } from '../utils/data';
+import { Photo } from './Photo';
 
 const RatingTable = ({ mode }) => {
   const global = useGlobal();
@@ -29,7 +30,7 @@ const RatingTable = ({ mode }) => {
       <div className="Rating__item" key="self">
         <div className="Rating__item-place">{modePlace}</div>
         <a target="_blank" rel="noreferrer" href={`https://vk.com/id${me.vk_user_id}`} className="Rating__item-link">
-          <img className="Rating__item-avatar" src={me.avatar} alt={me.id}/>
+          <Photo className="Rating__item-avatar" importance="low" src={me.avatar} />
         </a>
         <div className="Rating__item-caption">{me.first_name}</div>
         <div className="Rating__item-content">{me.rating}</div>
@@ -44,7 +45,7 @@ const RatingTable = ({ mode }) => {
           <div className="Rating__item" key={item.id}>
             <div className="Rating__item-place">{index + 1}</div>
             <a target="_blank" rel="noreferrer" href={`https://vk.com/id${item.vk_user_id}`} className="Rating__item-link">
-              <img className="Rating__item-avatar" src={item.avatar} alt={item.id}/>
+              <Photo className="Rating__item-avatar" importance="low" src={item.avatar} />
             </a>
             <div className="Rating__item-caption">{item.first_name}</div>
             <div className="Rating__item-content">{item.rating}</div>
